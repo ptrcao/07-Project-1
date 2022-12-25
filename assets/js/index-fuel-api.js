@@ -31,6 +31,11 @@
 var fuelSelect = document.getElementById("fuel-select")
 // var fuelSelect = document.querySelector("#fuel-select")
 
+
+// https://www.geeksforgeeks.org/how-to-reset-all-form-values-using-a-button-in-html/
+// https://www.w3schools.com/jsref/met_form_reset.asp
+
+
 fetch("https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials", {
   "headers": {
     "accept": "application/json",
@@ -107,7 +112,18 @@ fetch("https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_t
       
 
     }
-  });
+  })
+
+// []
+// 200 OK
+// if array.length < 1 
+// DO something
+
+  .catch( (error) => {console.log(error)} )
+
+// alternative to .then and .catch
+// async
+// await
 
 // Get form inputs
 document.getElementById("advance-search");
@@ -115,7 +131,7 @@ document.getElementById("advance-search");
 console.log("hello");
 
 var accessToken = "";
-var fuelType = "PDL";
+
 // We will use all brands
 var brand = [
   "7-Eleven",
@@ -151,13 +167,75 @@ var brand = [
   "Westside",
   "Woodham Petroleum",
 ];
+// this should be dynamic
+
+
 // I assume namedLocation can be whatever you want and does not have to be an actual postcode or something?
 var namedLocation = "Canterbury Leisure and Aquatic Centre";
 var latitude = "-33.9104";
 var longitude = "151.1136";
+
+
+var fuelOptionEle = document.getElementById("fuel-select")
+var radiusOptionEle = document.getElementById("radius-select")
+var rankingOptionEle = document.getElementById("ranking-select")
+
+document.getElementById("fetch").addEventListener("click",function(e){
+  e.preventDefault()
+  var fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
+  console.log(fuelType)
+  var radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
+  console.log(radius)
+  var sortByWhat = rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
+  console.log(ranking)
+  if(!fuelType || !radius || !sortByWhat){
+
+    // Clear out any previous error messages
+    document.getElementById('missing-text-before').innerHTML = '';
+    document.getElementById('missing-inputs').innerHTML = '';
+    document.getElementById('missing-text-after').innerHTML = '';
+    var plural;
+
+    // Reset array
+    missingArray = [];
+
+    if(!fuelType){missingArray.push('Fuel type')}
+    if(!radius){missingArray.push('Radius')}
+    if(!sortByWhat){missingArray.push('Rank by')}
+
+    for(var i = 0; i < missingArray.length; i++){
+      liNode = document.createElement("li");
+      txtNode = document.createTextNode(`${missingArray[i]}`);
+      liNode.appendChild(txtNode);
+      document.getElementById('missing-inputs').appendChild(liNode);
+    }
+
+    // Plural
+
+    if(missingArray.length > 1){
+      plural = 's';
+    }
+    else{
+      plural = '';
+    }
+
+    document.getElementById('missing-text-before').innerHTML =`Error: you are missing the following selection${plural}:`
+    document.getElementById('missing-text-after').innerHTML = `Please try again after you have made your selection${plural}.`
+    document.getElementById('exampleModalLongTitle').innerHTML = `Missing selection${plural}!`
+
+    // Fire the modal
+    $('#exampleModalCenter').modal()
+  }
+
+}
+)
+
+// Artificial selections
+// To test modal, comment out these 3:
+var fuelType = "PDL";
 var radius = "10";
-// radius = radius.toString();
 var sortByWhat = "distance";
+
 var sortascending = "true";
 
 // During testing, I'm just going to use the previously retrieved in storage to avoid burning through credits
@@ -231,7 +309,8 @@ if (!JSON.parse(localStorage.getItem("serializedResponse"))) {
 
       console.log(myObjDeserialized.prices[3].price);
       console.table(myObjDeserialized.prices[3].price);
-    });
+    })
+    .catch( (error) => {console.log(error)} )
 } else {
   console.log("Using localStorage data");
   let myObj = localStorage.getItem("serializedResponse");
