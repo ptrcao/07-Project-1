@@ -27,8 +27,6 @@
 
 // debugger
 
-
-
 var accessToken = "";
 
 // Artificial selections
@@ -65,16 +63,13 @@ var rankingOptionEle = document.getElementById("ranking-select");
 
 // DEFINE FETCH BUTTON AND EVENTS
 
-var fuelType;
-var radius;
-var sortByWhat;
 document.getElementById("fetch").addEventListener("click", function (e) {
   e.preventDefault();
-  fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
+  var fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
   console.log(fuelType);
-  radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
+  var radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
   console.log(radius);
-  sortByWhat =
+  var sortByWhat =
     rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
   console.log(sortByWhat);
 
@@ -132,7 +127,7 @@ document.getElementById("fetch").addEventListener("click", function (e) {
 });
 
 
-
+function runSearch(){
 
 // You want to run the fetch to get the brands (full range is assumed for search) and fuelType (options) from the get go
 
@@ -216,7 +211,6 @@ fetch(
     console.log({ brandsArray });
 
     
-  });
 
 
 
@@ -229,11 +223,12 @@ fetch(
 
 
 
-  function runSearch(){
+
+
 
 
     // During testing, I'm just going to use the previously retrieved in storage to avoid burning through credits
-    if (!localStorage.getItem("serializedResponse")) {
+    if (!JSON.parse(localStorage.getItem("serializedResponse"))) {
       fetch(
         "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
         {
@@ -276,35 +271,35 @@ fetch(
         // is .json the same as JSON.parse() ?
         .then((response) => {
           // example of storage of an object in localStorage without serializing it first; it will appear as an undefined object
-          // localStorage.setItem("finalResponse", response);
+          localStorage.setItem("finalResponse", response);
           // Now if we stringify it, it should be in the correct format for localStorage
           localStorage.setItem("serializedResponse", JSON.stringify(response));
 
-          // // retrieving the serializedResponse
-          // var myObj = localStorage.getItem("serializedResponse");
-          // console.log("Before JSON.parse(): ", myObj);
-          // console.table("Before JSON.parse(): ", myObj);
+          // retrieving the serializedResponse
+          var myObj = localStorage.getItem("serializedResponse");
+          console.log("Before JSON.parse(): ", myObj);
+          console.table("Before JSON.parse(): ", myObj);
 
-          // let myObjDeserialized = JSON.parse(
-          //   localStorage.getItem("serializedResponse")
-          // );
-          // console.log("After JSON.parse(): ", myObjDeserialized);
-          // console.table("After JSON.parse(): ", myObjDeserialized);
+          let myObjDeserialized = JSON.parse(
+            localStorage.getItem("serializedResponse")
+          );
+          console.log("After JSON.parse(): ", myObjDeserialized);
+          console.table("After JSON.parse(): ", myObjDeserialized);
 
-          // console.log(myObjDeserialized);
-          // console.table(myObjDeserialized);
-          // console.log(myObjDeserialized.stations[0].location.distance);
-          // console.table(myObjDeserialized.stations[0].location.distance);
+          console.log(myObjDeserialized);
+          console.table(myObjDeserialized);
+          console.log(myObjDeserialized.stations[0].location.distance);
+          console.table(myObjDeserialized.stations[0].location.distance);
 
-          // console.log(myObjDeserialized.prices);
-          // console.table(myObjDeserialized.prices);
-          // console.log(myObjDeserialized.stations[7].stationid);
-          // console.table(myObjDeserialized.stations[7].stationid);
+          console.log(myObjDeserialized.prices);
+          console.table(myObjDeserialized.prices);
+          console.log(myObjDeserialized.stations[7].stationid);
+          console.table(myObjDeserialized.stations[7].stationid);
 
-          // console.log(myObjDeserialized.prices[3].price);
-          // console.table(myObjDeserialized.prices[3].price);
+          console.log(myObjDeserialized.prices[3].price);
+          console.table(myObjDeserialized.prices[3].price);
 
-          displayResult(response);
+          displayResult(myObjDeserialized);
 
         })
         .catch((error) => {
@@ -344,7 +339,7 @@ fetch(
       displayResult(myObjDeserialized);
 
     }
-  }
+  });
 
 // []
 // 200 OK
@@ -452,4 +447,4 @@ function displayResult(main_array){
 }
 
 
-
+}
