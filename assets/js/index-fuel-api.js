@@ -255,16 +255,16 @@ fetch(
       )
         .then((response) => response.json())
         // .then( data => {accessToken = data.access_token; console.log(accessToken)} ))
-        .then((data) =>
+        .then((data) => 
           fetch(
-            "https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
+            "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
             {
               headers: {
                 // apikey: "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4",
                 apikey: apikey,
                 authorization: `Bearer ${data.access_token}`,
                 "content-type": "application/json",
-                requesttimestamp: "20/12/2022 08:00:00 PM",
+                requesttimestamp: "28/12/2022 01:30:00 PM",
                 transactionid: "4",
               },
               // "body": "{\n  \"fueltype\": \"P95\",\n  \"brand\": [\n    \"BP\"\n  ],\n  \"namedlocation\": \"2065\",\n  \"latitude\": \"-33.4362551\",\n  \"longitude\": \"151.2966549\",\n  \"radius\": \"\",\n  \"sortby\": \"price\",\n  \"sortascending\": \"true\"\n}",
@@ -374,6 +374,8 @@ fetch(
 
 
 function displayResult(main_array){
+
+  console.log({main_array})
 
   newArray = [];
   var current_code;
