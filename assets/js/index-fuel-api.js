@@ -28,8 +28,13 @@
 // debugger
 
 
+// Using test API
+var auth = "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==";
+var apikey = "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT";
 
-var accessToken = "";
+// Using free registered API
+// var auth = "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
+// var apikey = "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4";
 
 // Artificial selections
 // To test modal, comment out these 3:
@@ -49,11 +54,11 @@ var namedLocation = "Canterbury Leisure and Aquatic Centre";
 
 var latitude = "-33.9104";
 var longitude = "151.1136";
+// 10km
+// [{long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}]
 
 // https://www.geeksforgeeks.org/how-to-reset-all-form-values-using-a-button-in-html/
 // https://www.w3schools.com/jsref/met_form_reset.asp
-
-
 
 
 
@@ -64,6 +69,8 @@ var radiusOptionEle = document.getElementById("radius-select");
 var rankingOptionEle = document.getElementById("ranking-select");
 
 // DEFINE FETCH BUTTON AND EVENTS
+
+var brandsArray;
 
 var fuelType;
 var radius;
@@ -142,11 +149,11 @@ fetch(
     headers: {
       accept: "application/json",
       "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-      authorization:
-        "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==",
+      authorization: auth,
+        // "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==",
     },
-    referrerPolicy: "no-referrer",
-    body: null,
+    // referrerPolicy: "no-referrer",
+    // body: null,
     method: "GET",
   }
 )
@@ -158,7 +165,8 @@ fetch(
         headers: {
           accept: "application/json",
           // "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-          apikey: "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT",
+          // apikey: "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT",
+          apikey: apikey,
           authorization: `Bearer ${data.access_token}`,
           // "cache-control": "max-age=0",
           "content-type": "application/json; charset=utf-8",
@@ -208,7 +216,7 @@ fetch(
     var fuelBrands = data.brands.items;
     console.table(fuelBrands);
 
-    var brandsArray = [];
+    brandsArray = [];
     for (var i = 0; i < fuelBrands.length; ++i) {
       brandsArray.push(fuelBrands[i].name);
     }
@@ -240,7 +248,8 @@ fetch(
           headers: {
             accept: "application/json",
             authorization:
-              "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==",
+              // "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==",
+              auth,
           },
         }
       )
@@ -251,7 +260,8 @@ fetch(
             "https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
             {
               headers: {
-                apikey: "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4",
+                // apikey: "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4",
+                apikey: apikey,
                 authorization: `Bearer ${data.access_token}`,
                 "content-type": "application/json",
                 requesttimestamp: "20/12/2022 08:00:00 PM",
