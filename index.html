@@ -3,39 +3,46 @@
 <head>
   <meta charset="utf-8">
   <title>Fuel Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="assets/css/index.css" rel="stylesheet" />
 </head>
 <body>
 
 
-  <h1>Fuel Tracker</h1>
+  <h1 id="main-h1">Fuel Tracker</h1>
+
+  <!-- https://getbootstrap.com/docs/5.0/components/spinners/ -->
+  <div id="overlay" class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+
+
 <form>
   <select id="fuel-select" data-trigger="" name="choices-single-defaul">
-    <option placeholder="" value="">Fuel type</option>
+    <option placeholder="" value="">Fuel type - Required</option>
   </select>
 
   <select id="radius-select" data-trigger="">
-    <option placeholder="" value="">Radius (km)</option>
-    <option value="5">5 km</option>
-    <option value="10">10 km</option>
-    <option value="15">15 km</option>
-    <option value="20">20 km</option>
-    <option value="25">25 km</option>
-    <option value="30">30 km</option>
-    <option value="50">50 km</option>
-    <option value="">Unlimited</option>
+    <option placeholder="" value="">Within radius (km); unlimited by default</option>
+    <option value="5">Within 5 km</option>
+    <option value="10">Within 10 km</option>
+    <option value="15">Within 15 km</option>
+    <option value="20">Within 20 km</option>
+    <option value="25">Within 25 km</option>
+    <option value="30">Within 30 km</option>
+    <option value="50">Within 50 km</option>
+    <option value="unlimited">Unlimited by radius (km)</option>
   </select>
 
   <select  id="ranking-select" data-trigger="">
-    <option placeholder="" value="">Rank by</option>
-    <option value="Price">Price ASC</option>
-    <option value="Distance">Distance ASC</option>
+    <option placeholder="" value="">ASC Sort by - Required</option>
+    <!-- <option value="Price">Price ASC</option>
+    <option value="Distance">Distance ASC</option> -->
   </select>
 
   <div class="result-count">
     Search from <span id="station-count"></span> stations across NSW</div>
-
+  <div>*Note that the price will be displayed as "0 cents/L" for electric vehicle charging stations.  However, the actual cost in $/kWh is not available via the API at this time.</div>
 
     <button type="reset">RESET</button>
     <button id="fetch" type="submit">Find stations</button>
@@ -44,13 +51,8 @@
  
 <!-- Bootstrap modal: https://getbootstrap.com/docs/4.0/components/modal/ -->
 
-  <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button> -->
-
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -70,6 +72,51 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+<!-- Modal -->
+<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Error: Geolocation permissions required</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Geolocation is not enabled. In order to use this search facility, you will need to enable geolocation permissions in your browser.</p>
+        <p>Instructions on how to enable geolocation in your browser are as follows: ...</p>
+        <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+<!-- Modal -->
+<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="modal-body" class="modal-body">
+        <span id="missing-text-before"></span>
+        <ul id="missing-inputs" style="list-style-type:none;">
+        </ul>
+        <span id="missing-text-after"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -78,9 +125,7 @@
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
   <script src="assets/js/index-geo-api.js"></script>
   <script src="assets/js/index-fuel-api.js"></script>

@@ -27,6 +27,19 @@
 
 // debugger
 
+// Define elements
+var resultsContainer = document.getElementById("results-container");
+
+
+//??
+window.addEventListener("load", (event) => {
+  document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","none");
+});
+
+// Define modals
+var inputMissingModal = new bootstrap.Modal(document.getElementById('input-missing-modal'))
+var geolocMissingModal = new bootstrap.Modal(document.getElementById('geoloc-perms-err'))
+
 
 // Using test API
 var auth = "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==";
@@ -54,11 +67,33 @@ var namedLocation = "Canterbury Leisure and Aquatic Centre";
 
 var latitude = "-33.9104";
 var longitude = "151.1136";
+// var latitude;
+// var longitude;
 // 10km
 // [{long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}]
 
+
+// Fire modal if geolocation unavailable
+if(!latitude || !longitude){
+  geolocMissingModal.show();
+}
+else{
+// Display geoloc coordinates
+
+var h1HeadingEle = document.getElementById("main-h1")
+const geoCoordinates = document.createElement("div")
+geoCoordinates.innerHTML=`Your detected device geocoordinates are: latitude <span id="latitude">${latitude}</span>, longitude <span id="longitude">${longitude}</span>.`
+h1HeadingEle.parentNode.insertBefore(geoCoordinates,h1HeadingEle.nextSibling)
+// If referenceNode is the last child within its parent element, that's fine, because referenceNode.nextSibling will be null and insertBefore handles that case by adding to the end of the list.
+// https://stackoverflow.com/a/4793630/9095603
+}
+
+
+// RESET form
 // https://www.geeksforgeeks.org/how-to-reset-all-form-values-using-a-button-in-html/
 // https://www.w3schools.com/jsref/met_form_reset.asp
+
+
 
 
 
@@ -75,18 +110,39 @@ var brandsArray;
 var fuelType;
 var radius;
 var sortByWhat;
+
+
 document.getElementById("fetch").addEventListener("click", function (e) {
   e.preventDefault();
+
+  // Fire modal if geolocation unavailable
+  if(!latitude || !longitude){
+    geolocMissingModal.show();
+  }
+  else{
+
+  document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","block");
+
   fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
   console.log(fuelType);
+ 
   radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
   console.log(radius);
+  if(!radius){
+    // if no selection is made
+    // then set the value of radius to empty
+    radius=""
+    // and automatically select unlimited dropdown option for the user
+    radiusOptionEle.value = "unlimited";
+  }
+
   sortByWhat =
     rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
   console.log(sortByWhat);
 
   // Add missing inputs modal
-  if (!fuelType || !radius || !sortByWhat) {
+  // if (!fuelType || !radius || !sortByWhat) {
+  if (!fuelType || !sortByWhat) {
     // Clear out any previous error messages
     document.getElementById("missing-text-before").innerHTML = "";
     document.getElementById("missing-inputs").innerHTML = "";
@@ -132,10 +188,14 @@ document.getElementById("fetch").addEventListener("click", function (e) {
     ).innerHTML = `Missing selection${plural}!`;
 
     // Fire the modal
-    $("#exampleModalCenter").modal();
+    inputMissingModal.show()
   } else {
     runSearch();
   }
+
+  // end braces for if(!latitude || !longitude){
+  }
+
 });
 
 
@@ -223,7 +283,22 @@ fetch(
 
     console.log({ brandsArray });
 
+    // Dynamically get sort-by fields
     
+    for (var i = 0; i < data.sortfields.items.length; ++i) {
+
+      sortByCode = data.sortfields.items[i].code;
+      sortByName = data.sortfields.items[i].name;
+      console.log({ sortByCode });
+      console.log({ sortByName });
+
+      document.getElementById('ranking-select').add(new Option(sortByName, sortByCode));
+    }
+    
+  // Dynamically display number of stations
+    document.getElementById("station-count").innerText = data.stations.items.length;
+
+
   });
 
 
@@ -376,6 +451,18 @@ fetch(
 function displayResult(main_array){
 
   console.log({main_array})
+  console.log({resultsContainer})
+
+
+  var resultsCount = main_array.stations.length;
+  var resultsCountEle = document.createElement("div")
+  resultsCountEle.innerText = `${resultsCount} results found:`
+  resultsContainer.appendChild(resultsCountEle)
+  
+  var bigMap = document.createElement("img")
+  bigMap.setAttribute("src","assets/images/example-big-map.png")
+  bigMap.setAttribute("alt","Summary map")
+  resultsContainer.appendChild(bigMap)
 
   newArray = [];
   var current_code;
@@ -429,7 +516,7 @@ function displayResult(main_array){
     var the_price = main_array.prices[indexOfInterest].price;
     console.log({ the_price });
 
-    var resultsContainer = document.getElementById("results-container");
+    
 
     let resultsSlot = document.createElement("div");
     resultsSlot.setAttribute("class", `station-index-${indexOfInterest}`);
@@ -438,10 +525,17 @@ function displayResult(main_array){
     rank = i + 1;
 
     resultsSlot.innerHTML = `
+<div class="card">
+<img style="max-width:400px; height:auto" class="card-img-top" src="assets/images/example-small-map.PNG" alt="Card image cap">
 
-<h4>Rank #${rank} by ${sortByWhat}</h4>
+<div class="card-body">
+<div class="card-header">
+<h5>Rank #${rank} by ${sortByWhat}</h5>
 <h3>${main_array.stations[i].name}</h3>
+</div>
+
 <div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${main_array.stations[i].location.distance} km</div>
+
 <table>
 <tbody>
 <tr><th>Station code:</th><td>${main_array.stations[i].code}</td></tr>
@@ -450,6 +544,10 @@ function displayResult(main_array){
 <tr><th>Latitude:</th><td>${main_array.stations[i].location.longitude}</td></tr>
 </tbody>
 </table>
+
+</div>
+
+</div>
 `;
 
     if (main_array.stations[i].location.distance > 10) {
@@ -460,7 +558,12 @@ function displayResult(main_array){
     }
   }
 
-
+// Append search again button at end
+const searchAgainBtn = document.createElement("button")
+searchAgainBtn.innerHTML = "Search again";
+searchAgainBtn.setAttribute("type","submit")
+searchAgainBtn.setAttribute("id","search-again-btn")
+resultsContainer.appendChild(searchAgainBtn)
 }
 
 
