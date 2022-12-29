@@ -8,6 +8,50 @@
 </head>
 <body>
 
+<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+<!-- Modal -->
+<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Error: Geolocation permissions required</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Geolocation is not enabled. In order to use this search facility, you will need to enable geolocation permissions in your browser.</p>
+        <p>Instructions on how to enable geolocation in your browser are as follows: ...</p>
+        <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+<!-- Modal -->
+<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="modal-body" class="modal-body">
+        <span id="missing-text-before"></span>
+        <ul id="missing-inputs" style="list-style-type:none;">
+        </ul>
+        <span id="missing-text-after"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <h1 id="main-h1">Fuel Tracker</h1>
 
@@ -75,53 +119,11 @@
 </div> -->
 
 
-<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
-<!-- Modal -->
-<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Error: Geolocation permissions required</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Geolocation is not enabled. In order to use this search facility, you will need to enable geolocation permissions in your browser.</p>
-        <p>Instructions on how to enable geolocation in your browser are as follows: ...</p>
-        <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p> -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
-<!-- Modal -->
-<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div id="modal-body" class="modal-body">
-        <span id="missing-text-before"></span>
-        <ul id="missing-inputs" style="list-style-type:none;">
-        </ul>
-        <span id="missing-text-after"></span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
-  <div id="results-container"></div>
+
+  <div id="results-container" class="card-deck"></div>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 

@@ -332,6 +332,7 @@ fetch(
         // .then( data => {accessToken = data.access_token; console.log(accessToken)} ))
         .then((data) => 
           fetch(
+            //if needed https://cors-anywhere.herokuapp.com/corsdemo
             "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
             {
               headers: {
@@ -550,6 +551,8 @@ function displayResult(main_array){
 </div>
 `;
 
+// Limit the number of results returned
+// Warn the user when no results inside radius; in that case, the 10 next closest will be returned by the API
     if (main_array.stations[i].location.distance > 10) {
       console.log("Outside of 10km");
     }
