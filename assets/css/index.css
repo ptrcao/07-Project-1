@@ -1,0 +1,9 @@
+.glyphicon-search{
+  position: sticky;
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 10px;
+  bottom: 1rem;
+  left: 100%;
+  align-self: flex-end;
+}
