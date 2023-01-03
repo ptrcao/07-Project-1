@@ -1,14 +1,3 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-  // https://flaviocopes.com/dom-ready/
-
-  // load versus DOMContentLoaded:
-  // The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
-  // https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
-
-
-// var globalAccessToken = "QdGf3YaifPEzy9rbYpwwKvhFDm6o";
-var globalAccessToken;
-
 // TIP: you can literally edit and add data into the localStorage by hand, so you can paste data that I give you into local localStorage so you don't have to make the API calls
 // How would we figure out the structure of the API call without copying the fetch?
 
@@ -41,18 +30,11 @@ var globalAccessToken;
 // Define elements
 var resultsContainer = document.getElementById("results-container");
 
-// fetch()
-// .then(
-//   fetch()
-//   .then()
-// )
-
-
 
 //??
-// window.addEventListener("load", (event) => {
-//   document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","none");
-// });
+window.addEventListener("load", (event) => {
+  document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","none");
+});
 
 // Define modals
 var inputMissingModal = new bootstrap.Modal(document.getElementById('input-missing-modal'))
@@ -130,8 +112,6 @@ var radius;
 var sortByWhat;
 
 
-
-function attachListenerToButton(){
 document.getElementById("fetch").addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -141,7 +121,7 @@ document.getElementById("fetch").addEventListener("click", function (e) {
   }
   else{
 
-  // document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","block");
+  document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","block");
 
   fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
   console.log(fuelType);
@@ -217,16 +197,13 @@ document.getElementById("fetch").addEventListener("click", function (e) {
   }
 
 });
-}
-
 
 
 
 
 // You want to run the fetch to get the brands (full range is assumed for search) and fuelType (options) from the get go
-async function getCredentials(){
-try{
-let response = await fetch(
+
+fetch(
   "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
   {
     headers: {
@@ -240,31 +217,9 @@ let response = await fetch(
     method: "GET",
   }
 )
-  let data = await response.json()
-  globalAccessToken = data.access_token;
-  console.log("here:" + data.access_token)
-  console.log("here globalAccessToken:" + globalAccessToken)
-  return globalAccessToken;
-} 
-
-  catch(error){console.log(error);}
-}
-
-
-  // console.log({globalAccessToken})
-  //   setTimeout(wait5,5000);
-  //   function wait5(){
-  //     remainingFetch();
-  //   }
-  
-
-    async function populateForm(credentials){
-
-      try{
-      console.log('Check globalAccessToken: ' + globalAccessToken)
-      console.log('Received as argument: ' + credentials)
-      
-    let response = await fetch(
+  .then((response) => response.json())
+  .then((data) =>
+    fetch(
       "https://api.onegov.nsw.gov.au/FuelCheckRefData/v2/fuel/lovs?states=NSW",
       {
         headers: {
@@ -272,7 +227,7 @@ let response = await fetch(
           // "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
           // apikey: "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT",
           apikey: apikey,
-          authorization: `Bearer ${credentials}`,
+          authorization: `Bearer ${data.access_token}`,
           // "cache-control": "max-age=0",
           "content-type": "application/json; charset=utf-8",
           "if-modified-since": "25/12/2022 05:00:00 AM",
@@ -292,14 +247,15 @@ let response = await fetch(
         // "credentials": "include"
       }
     )
-    console.log('check line 295: ' + response)
-  let data = await response.json()
+  )
+  .then((response) => response.json())
   // IF YOU DO
   // .then((response) => {
   // response.json()
   // })
   // with the curly braces, it will return undefined
 
+  .then((data) => {
     // Add fuel types for form
     var fuelTypes = data.fueltypes;
     console.log({ fuelTypes });
@@ -342,12 +298,8 @@ let response = await fetch(
   // Dynamically display number of stations
     document.getElementById("station-count").innerText = data.stations.items.length;
 
-  }
-  
-  catch(error){console.log(error)};
 
-
-}
+  });
 
 
 
@@ -357,33 +309,36 @@ let response = await fetch(
 
 
 
-  async function runSearch(){
 
-    try{
+
+
+  function runSearch(){
+
+
     // During testing, I'm just going to use the previously retrieved in storage to avoid burning through credits
-    // if (!localStorage.getItem("serializedResponse")) {
-      // fetch(
-      //   "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
-      //   {
-      //     headers: {
-      //       accept: "application/json",
-      //       authorization:
-      //         // "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==",
-      //         auth,
-      //     },
-      //   }
-      // )
-      //   .then((response) => response.json())
-      //   // .then( data => {accessToken = data.access_token; console.log(accessToken)} ))
-      //   .then((data) => 
-          let response = await fetch(
+    if (!localStorage.getItem("serializedResponse")) {
+      fetch(
+        "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
+        {
+          headers: {
+            accept: "application/json",
+            authorization:
+              // "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==",
+              auth,
+          },
+        }
+      )
+        .then((response) => response.json())
+        // .then( data => {accessToken = data.access_token; console.log(accessToken)} ))
+        .then((data) => 
+          fetch(
             //if needed https://cors-anywhere.herokuapp.com/corsdemo
             "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
             {
               headers: {
                 // apikey: "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4",
                 apikey: apikey,
-                authorization: `Bearer ${globalAccessToken}`,
+                authorization: `Bearer ${data.access_token}`,
                 "content-type": "application/json",
                 requesttimestamp: "28/12/2022 01:30:00 PM",
                 transactionid: "4",
@@ -402,17 +357,15 @@ let response = await fetch(
               method: "POST",
             }
           )
-        // END HERE )
-        let data = await response.json();
+        )
+        .then((response) => response.json())
         // is .json the same as JSON.parse() ?
-       
+        .then((response) => {
           // example of storage of an object in localStorage without serializing it first; it will appear as an undefined object
           // localStorage.setItem("finalResponse", response);
           // Now if we stringify it, it should be in the correct format for localStorage
           localStorage.setItem("serializedResponse", JSON.stringify(response));
 
-          localStorage.setItem("Response", response);
-          localStorage.setItem("data", data);
           // // retrieving the serializedResponse
           // var myObj = localStorage.getItem("serializedResponse");
           // console.log("Before JSON.parse(): ", myObj);
@@ -437,45 +390,47 @@ let response = await fetch(
           // console.log(myObjDeserialized.prices[3].price);
           // console.table(myObjDeserialized.prices[3].price);
 
-          displayResult(data);
+          displayResult(response);
 
-          }
-        catch(error){console.log(error);}
-  //   } else {
-  //     console.log("Using localStorage data");
-  //     let myObj = localStorage.getItem("serializedResponse");
-  //     console.log("Before JSON.parse(): ", myObj);
-  //     console.table("Before JSON.parse(): ", myObj);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("Using localStorage data");
+      let myObj = localStorage.getItem("serializedResponse");
+      console.log("Before JSON.parse(): ", myObj);
+      console.table("Before JSON.parse(): ", myObj);
 
-  //     console.log("After JSON.parse(): ", myObj.stations);
-  //     console.table("After JSON.parse(): ", myObj.stations);
+      console.log("After JSON.parse(): ", myObj.stations);
+      console.table("After JSON.parse(): ", myObj.stations);
 
-  //     let myObjDeserialized = JSON.parse(
-  //       localStorage.getItem("serializedResponse")
-  //     );
-  //     console.log("After JSON.parse(): ", myObjDeserialized);
-  //     console.table("After JSON.parse(): ", myObjDeserialized);
+      let myObjDeserialized = JSON.parse(
+        localStorage.getItem("serializedResponse")
+      );
+      console.log("After JSON.parse(): ", myObjDeserialized);
+      console.table("After JSON.parse(): ", myObjDeserialized);
 
-  //     console.log("After JSON.parse(): ", myObjDeserialized.stations);
-  //     console.table("After JSON.parse(): ", myObjDeserialized.stations);
+      console.log("After JSON.parse(): ", myObjDeserialized.stations);
+      console.table("After JSON.parse(): ", myObjDeserialized.stations);
 
-  //     console.log(myObjDeserialized.prices);
-  //     console.table(myObjDeserialized.prices);
-  //     console.log(myObjDeserialized.stations);
-  //     console.table(myObjDeserialized.stations);
-  //     console.log(myObjDeserialized.stations.location);
-  //     console.table(myObjDeserialized.stations.location);
+      console.log(myObjDeserialized.prices);
+      console.table(myObjDeserialized.prices);
+      console.log(myObjDeserialized.stations);
+      console.table(myObjDeserialized.stations);
+      console.log(myObjDeserialized.stations.location);
+      console.table(myObjDeserialized.stations.location);
 
-  //     console.log("Yo");
-  //     for (var i = 0; i < myObjDeserialized.stations.length; i++) {
-  //       console.log(myObjDeserialized.stations[i].location);
-  //       console.table(myObjDeserialized.stations[i].location);
-  //     }
+      console.log("Yo");
+      for (var i = 0; i < myObjDeserialized.stations.length; i++) {
+        console.log(myObjDeserialized.stations[i].location);
+        console.table(myObjDeserialized.stations[i].location);
+      }
 
-  //     displayResult(myObjDeserialized);
+      displayResult(myObjDeserialized);
 
-  //   }
-  // }
+    }
+  }
 
 // []
 // 200 OK
@@ -571,39 +526,28 @@ function displayResult(main_array){
     rank = i + 1;
 
     resultsSlot.innerHTML = `
+<div class="card">
+<img style="max-width:400px; height:auto" class="card-img-top" src="assets/images/example-small-map.PNG" alt="Card image cap">
 
+<div class="card-body">
+<div class="card-header">
+<h5>Rank #${rank} by ${sortByWhat}</h5>
+<h3>${main_array.stations[i].name}</h3>
+</div>
 
+<div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${main_array.stations[i].location.distance} km</div>
 
+<table>
+<tbody>
+<tr><th>Station code:</th><td>${main_array.stations[i].code}</td></tr>
+<tr><th>Street Address:</th><td>${main_array.stations[i].address}</td></tr>
+<tr><th>Longitude:</th><td>${main_array.stations[i].location.latitude}</td></tr>
+<tr><th>Latitude:</th><td>${main_array.stations[i].location.longitude}</td></tr>
+</tbody>
+</table>
 
-<div class="card mb-3" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src="..." class="img-fluid rounded-start" alt="...">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        
-        <h5>Rank #${rank} by ${sortByWhat}</h5>
-        <h3>${main_array.stations[i].name}</h3>
+</div>
 
-        <div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${main_array.stations[i].location.distance} km</div>
-
-        <p class="card-text">
-                
-        <table>
-        <tbody>
-        <tr><th>Station code:</th><td>${main_array.stations[i].code}</td></tr>
-        <tr><th>Street Address:</th><td>${main_array.stations[i].address}</td></tr>
-        <tr><th>Longitude:</th><td>${main_array.stations[i].location.latitude}</td></tr>
-        <tr><th>Latitude:</th><td>${main_array.stations[i].location.longitude}</td></tr>
-        </tbody>
-        </table>
-
-        </p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-      </div>
-    </div>
-  </div>
 </div>
 `;
 
@@ -624,16 +568,6 @@ searchAgainBtn.setAttribute("type","submit")
 searchAgainBtn.setAttribute("id","search-again-btn")
 resultsContainer.appendChild(searchAgainBtn)
 }
-  }
 
 
-async function runApp(){
-  var credentials = await getCredentials();
-  console.log('credentials in runApp(): ' + credentials)
-  await populateForm(credentials);
-  attachListenerToButton();
-}
 
-runApp();
-
-})
