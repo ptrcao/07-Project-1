@@ -360,7 +360,7 @@ let response = await fetch(
 
 
   async function runSearch(){
-
+    loadingOverlayOn()
     try{
     // During testing, I'm just going to use the previously retrieved in storage to avoid burning through credits
     // if (!localStorage.getItem("serializedResponse")) {
@@ -439,8 +439,8 @@ let response = await fetch(
           // console.log(myObjDeserialized.prices[3].price);
           // console.table(myObjDeserialized.prices[3].price);
 
-          displayResult(data);
-
+          await displayResult(data);
+          loadingOverlayOff()
           }
         catch(error){console.log(error);}
   //   } else {
@@ -496,7 +496,7 @@ let response = await fetch(
 
 
 
-function displayResult(main_array){
+async function displayResult(main_array){
 
   console.log({main_array})
   console.log({resultsContainer})
