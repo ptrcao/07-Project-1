@@ -1,3 +1,5 @@
+var isLoading = false;
+
 document.addEventListener('DOMContentLoaded', (event) => {
   // https://flaviocopes.com/dom-ready/
 
@@ -51,7 +53,7 @@ var resultsContainer = document.getElementById("results-container");
 
 //??
 // window.addEventListener("load", (event) => {
-//   document.getElementsByClassName("spinner-grow")[0].style.setProperty("display","none");
+
 // });
 
 // Define modals
@@ -131,7 +133,7 @@ var sortByWhat;
 
 
 
-function attachListenerToButton(){
+async function attachListenerToButton(){
 document.getElementById("fetch").addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -512,7 +514,8 @@ function displayResult(main_array){
 
   newArray = [];
   var current_code;
-  for (var i = 0; i < main_array.stations.length; i++) {
+  // for (var i = 0; i < main_array.stations.length; i++) {
+  for (var i = 0; i <= 19; i++) {
     console.log(main_array.stations[i].location.distance);
 
     current_code = main_array.stations[i].code;
@@ -575,7 +578,7 @@ function displayResult(main_array){
 
 
 
-<div class="card mb-3" style="max-width: 540px;">
+<div id="${main_array.stations[i].code}" class="card mb-3" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4">
       <img src="..." class="img-fluid rounded-start" alt="...">
@@ -627,13 +630,28 @@ resultsContainer.appendChild(searchAgainBtn)
   }
 
 
+  
+
 async function runApp(){
+  loadingOverlayOn()
+  // isLoading = true;
   var credentials = await getCredentials();
   console.log('credentials in runApp(): ' + credentials)
-  await populateForm(credentials);
-  attachListenerToButton();
+
+  await Promise.all([populateForm(credentials), attachListenerToButton()]);
+  // https://stackoverflow.com/a/35612484/9095603
+
+  loadingOverlayOff()
+  // isLoading = false;
 }
 
 runApp();
 
 })
+
+function loadingOverlayOn(){
+  document.getElementsByClassName("overlay")[0].style.setProperty("display","block");
+}
+function loadingOverlayOff(){
+  document.getElementsByClassName("overlay")[0].style.setProperty("display","none","important");
+}

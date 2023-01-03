@@ -8,6 +8,14 @@
 </head>
 <body>
 
+  <!-- put the spinner at the top of the page for its CSS to make it full page -->
+  <div class="overlay d-flex justify-content-center align-items-center">
+    <h5>Please wait...</h5>
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
 <div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -56,9 +64,17 @@
   <h1 id="main-h1">Fuel Tracker</h1>
 
   <!-- https://getbootstrap.com/docs/5.0/components/spinners/ -->
-  <div id="overlay" class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+  <!-- <div id="overlay" class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
     <span class="visually-hidden">Loading...</span>
-  </div>
+  </div> -->
+  <!-- <div id="spinner-full-overlay-container">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div> -->
+
+
+
 
 
 <form>
@@ -131,6 +147,7 @@
 
   <script src="assets/js/index-geo-api.js"></script>
   <script src="assets/js/index-fuel-api.js"></script>
+
 
 </body>
 </html>
