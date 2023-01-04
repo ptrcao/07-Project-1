@@ -8,12 +8,11 @@ https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=
 */
 
 
-
-
-
-
-
-
+var fuelRequest =
+{"stations":[{"brandid":"1-GFYV-6","stationid":"1-GPPT-163","brand":"Metro Fuel","code":1046,"name":"Metro Fuel Canterbury","address":"280 Canterbury Road, Canterbury NSW 2193","location":{"distance":0.43,"latitude":-33.914023,"longitude":151.115187},"state":"NSW"}
+,{"brandid":"1-GFYV-2","stationid":"1-GPPT-328","brand":"Budget","code":1229,"name":"Budget Campsie","address":"403 Canterbury Road, Campsie NSW 2194","location":{"distance":0.78,"latitude":-33.916148,"longitude":151.108753},"state":"NSW"}
+,{"brandid":"1-GFYV-5","stationid":"1-35MMKJG","brand":"Independent","code":17288,"name":"Xpress fuels","address":"134 Brighton Ave, CAMPSIE NSW 2194","location":{"distance":1.00,"latitude":-33.903373,"longitude":151.106875},"state":"NSW"}
+,{"brandid":"1-GFYV-6","stationid":"1-3KFNTWA","brand":"Metro Fuel","code":18305,"name":"Metro Hurlstone Park","address":"13-19 CANTERBURY RD, CANTERBURY NSW 2193","location":{"distance":1.11,"latitude":-33.907813,"longitude":151.125233},"state":"NSW"}]}
 
 
 
@@ -21,30 +20,22 @@ https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=
 /* only top 5 stations */
 
 var mapList = document.getElementsByClassName("map");
-var maxStations = 5;
+console.log(mapList);
+var maxStations = 4;
+/*
 for(var i=0; i<maxStations; i++){
     
     calcRoute(mapList[i].id);
-
-
-
-
 }
-
-
-
-
-
-
 
 /* function to calculate the route for each ma */
 
-function calcRoute(mapLabel){
+function calcRoute(mapLabel, station_iter){
 
     const map = document.getElementById(mapLabel);
 
-  var orig = {lat: 0, lng: 0};
-  var dest = {lst: 0, lng: 0};
+  var orig = {lat: 33.9106, lng: -151.1564};
+  var dest = {lat: fuelRequest.stations[station_iter].location[lat], lng: fuelRequest.stations[station_iter].location[lng]};
 
 /*
   var orig = {lat: 40.71303542062185, lng: -74.00801175633978} // user location ;
@@ -75,13 +66,16 @@ function calcRoute(mapLabel){
     waypoints_label_iter++;
     markers.push("markers=color:blue|label:" + waypoints_labels[waypoints_label_iter] + '|' + end);
     markers = markers.join('&');
-    map.src = ("https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=14&size=1000x1000&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&maptype=roadmap&path=enc:" + path + "&" + markers);
+    map.src = ("https://maps.googleapis.com/maps/api/staticmap?center=33.9106,-151.1564&zoom=12&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&maptype=roadmap&path=enc:" + path + "&" + markers);
 
 
   });
 
 
 }
+
+calcRoute(map1,0);
+
 
 
 
