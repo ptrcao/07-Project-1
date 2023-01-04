@@ -5,7 +5,10 @@ var sortByName;
 var fuelCode;
 var rank;
 
-document.addEventListener("DOMContentLoaded", (event) => {
+var countOfReturnedResults;
+
+
+document.addEventListener("DOMContentLoaded", () => {
   // https://flaviocopes.com/dom-ready/
 
   // load versus DOMContentLoaded:
@@ -236,9 +239,18 @@ async function displayResult(main_array) {
   console.log({ main_array });
   console.log({ resultsContainer });
 
-  var resultsCount = main_array.stations.length;
+
   var resultsCountEle = document.createElement("div");
-  resultsCountEle.innerText = `${resultsCount} results found:`;
+ 
+  // be careful to ensure this limit is limiting to the TOP 20 results and not to the BOTTOM 20
+  if(main_array.stations.length > 20){
+    countOfReturnedResults = main_array.stations.length;
+    resultsCountEle.innerText = `20 results returned (actually ${main_array.stations.length} found, but limited to the 20 best):`;
+  }
+  else{
+    resultsCountEle.innerText = `${countOfReturnedResults} results found:`;
+  }
+
   resultsContainer.appendChild(resultsCountEle);
 
   var bigMap = document.createElement("img");
@@ -246,10 +258,17 @@ async function displayResult(main_array) {
   bigMap.setAttribute("alt", "Summary map");
   resultsContainer.appendChild(bigMap);
 
-  var newArray = [];
+  // var newArray = [];
   var current_code;
-  // for (var i = 0; i < main_array.stations.length; i++) {
   for (var i = 0; i < main_array.stations.length; i++) {
+    // you can't limit by using a fixed/static number because there will be cases where i does not even reach 20, for example, so use an if breakout condition:
+    if(i === 20){
+      countOfReturnedResults = 20;
+      // i = 19 was the 20th, so we do nothing from i = 20
+      break;
+    }
+
+
     console.log(main_array.stations[i].location.distance);
 
     current_code = main_array.stations[i].code;
@@ -352,18 +371,24 @@ async function displayResult(main_array) {
     // }
   }
 
+ 
+
+
   // Append search again button at end
   const searchAgainBtn = document.createElement("button");
   searchAgainBtn.innerHTML = "Search again";
   searchAgainBtn.setAttribute("type", "submit");
   searchAgainBtn.setAttribute("id", "search-again-btn");
+
+  searchAgainBtn.setAttribute("onClick", "window.location.reload();");
+
   resultsContainer.appendChild(searchAgainBtn);
 }
 
 async function runSearch() {
 
-  var searchPanel = document.getElementById("search-parent-container")
-  searchPanel.style.setProperty("display","none")
+  var searchPanel = document.getElementById("search-parent-container");
+  searchPanel.style.setProperty("display","none");
 
   loadingOverlayOn();
   try {
