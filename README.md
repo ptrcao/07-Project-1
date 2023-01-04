@@ -1,1 +1,0 @@
-## run result.html on live server to test it, havent integrated the rest yet

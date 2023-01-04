@@ -1,1 +1,0 @@
-// Needs to grab user's device coordinates: latitude and longitude
