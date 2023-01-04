@@ -8,22 +8,15 @@
   </head>
   <body>
     <h1>Welcome To My Map</h1>
-    <button id = locBtn>Try It Out!</button>
 
-    <p id="demo"></p>
-    <div id="map"></div>
+    <div><button class="btn" onclick="calcRoute()">Lets Go!</button> </div>
 
+
+    <script src=" https://maps.googleapis.com/maps/api/js?key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg"></script>
+    <img id = "map" src="https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=8&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg">
+    <script src="./Detect.js/Detect.js-master/detect.js"></script>
+    <script src="./develop/script.js"></script>
     
-    <!-- 
-     The `defer` attribute causes the callback to execute after the full HTML
-     document has been parsed. For non-blocking uses, avoiding race conditions,
-     and consistent behavior across browsers, consider loading using Promises
-     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
-    -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&callback=initMap&v=weekly"
-      defer
-    ></script>
     
   </body>
 </html>

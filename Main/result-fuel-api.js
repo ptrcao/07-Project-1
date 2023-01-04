@@ -1,27 +1,51 @@
 /* TODO 
 https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=8&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg
-
-create a string for this map and change the source of the element with ID map to match this plus the additional path.
-
 */
 
-var user = detect.parse(navigator.userAgent);
-console.log(
-  user.browser.family,
-  user.browser.version,
-  user.os.name
- );
 
-const map = document.getElementById("map");
 
-function calcRoute(){
+
+
+
+
+
+
+
+
+/*for loop searching for each map, to run on this page being loaded */
+/* only top 5 stations */
+
+var mapList = document.getElementsByClassName("map");
+var maxStations = 5;
+for(var i=0; i<maxStations; i++){
+    
+    calcRoute(mapList[i].id);
+
+
+
+
+}
+
+
+
+
+
+
+
+/* function to calculate the route for each ma */
+
+function calcRoute(mapLabel){
+
+    const map = document.getElementById(mapLabel);
+
+  var orig = {lat: 0, lng: 0};
+  var dest = {lst: 0, lng: 0};
+
 /*
-  var orig = document.getElementById("orig");
-  var dest = document.getElementById("dest");
-*/
-  var orig = {lat: 40.71303542062185, lng: -74.00801175633978} /* user location */;
-  var dest = {lat: 40.71580432662713, lng: -73.99684223456448} /* petrol station */;
-  var start = orig.lat + "," + orig.lng;
+  var orig = {lat: 40.71303542062185, lng: -74.00801175633978} // user location ;
+  var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station ;
+  */
+  var start = orig.lat + "," + orig.lng;  
   var end = dest.lat + "," + dest.lng;
  
 
