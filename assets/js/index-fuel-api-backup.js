@@ -569,5 +569,3 @@ searchAgainBtn.setAttribute("id","search-again-btn")
 resultsContainer.appendChild(searchAgainBtn)
 }
 
-
-
