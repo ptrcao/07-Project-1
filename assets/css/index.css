@@ -20,3 +20,13 @@
 } */
   /* sticky navbar or button */
 
+  #search-again-btn{
+    position: sticky;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 10px;
+    bottom: 1rem;
+    left: 100%;
+  }
+
+  

@@ -5,7 +5,17 @@ var sortByName;
 var fuelCode;
 var rank;
 
+var current_code;
+
+
 var countOfReturnedResults;
+
+var radiusM;
+
+/* Sarah's code */
+
+
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // load versus DOMContentLoaded:
   // The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+
+
 
 
 
@@ -172,6 +184,7 @@ async function attachListenerToButton() {
         // and automatically select unlimited dropdown option for the user
         radiusOptionEle.value = "unlimited";
       }
+      if(radius){radiusM = radius * 1000}
 
       sortByWhat =
         rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
@@ -239,27 +252,79 @@ async function displayResult(main_array) {
   console.log({ main_array });
   console.log({ resultsContainer });
 
+ 
+
+// Check if at least some stations fall inside radius
+var arrayDltR = [];
+for (var i = 0; i < main_array.stations.length; i++) {
+
+  console.log('distance: ' + main_array.stations[i].location.distance)
+  console.log({radius})
+  if(main_array.stations[i].location.distance <= radius){
+    // array Distance less than Radius
+    arrayDltR.push(true);
+  }
+  else{
+    arrayDltR.push(false);
+  }
+}
+
+// If there are not at least some stations inside radius, then report as such to user, advise to broaden radius and end program - the Search Again button will become available
+console.log({arrayDltR})
+if(arrayDltR.some(value => value === true)){
+  console.log('At least some service stations found inside of radius.')
+}
+else{
+  console.log('No service stations were found inside your specified radius.  Please broaden your radius and try again.')
+  var resultsCountEle = document.createElement("div");
+  resultsCountEle.innerText = 'No service stations were found inside your specified radius.  Please broaden your radius and try again.';
+  resultsContainer.appendChild(resultsCountEle);
+
+  appendSearchAgainButton();
+
+  // then exit the function
+  return
+}
+
+
+
 
   var resultsCountEle = document.createElement("div");
  
   // be careful to ensure this limit is limiting to the TOP 20 results and not to the BOTTOM 20
   if(main_array.stations.length > 20){
-    countOfReturnedResults = main_array.stations.length;
-    resultsCountEle.innerText = `20 results returned (actually ${main_array.stations.length} found, but limited to the 20 best):`;
+    // countOfReturnedResults = main_array.stations.length;
+    resultsCountEle.innerText = `20 results returned (actually ${main_array.stations.length} found, but limited to best 20):`;
   }
-  else{
-    resultsCountEle.innerText = `${countOfReturnedResults} results found:`;
+  else if( (main_array.stations.length > 0 ) && ( main_array.stations.length <= 20) ){
+    resultsCountEle.innerText = `${main_array.stations.length} results found:`;
+  }
+  else if(main_array.stations.length <= 0 ){
+    resultsCountEle.innerText = `No results found. Try relaxing or broadening your search parameters.`;
+    // unlike the conditions above, the append elements are required here because the program will now exit
+    resultsContainer.appendChild(resultsCountEle);
+    appendSearchAgainButton();
+    return
   }
 
   resultsContainer.appendChild(resultsCountEle);
+  
 
   var bigMap = document.createElement("img");
   bigMap.setAttribute("src", "assets/images/example-big-map.png");
   bigMap.setAttribute("alt", "Summary map");
+
+
   resultsContainer.appendChild(bigMap);
 
-  // var newArray = [];
-  var current_code;
+
+
+
+
+
+
+
+  
   for (var i = 0; i < main_array.stations.length; i++) {
     // you can't limit by using a fixed/static number because there will be cases where i does not even reach 20, for example, so use an if breakout condition:
     if(i === 20){
@@ -267,6 +332,17 @@ async function displayResult(main_array) {
       // i = 19 was the 20th, so we do nothing from i = 20
       break;
     }
+
+
+ // If none of the returned stations are within the radius then return: "there are no stations inside your radius.  Please try again and broaden the radius."
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+  // for stricter condition, you can use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+  
+
+  
+
+
 
 
     console.log(main_array.stations[i].location.distance);
@@ -316,7 +392,9 @@ async function displayResult(main_array) {
 
     // Get price for corresponding
     var the_price = main_array.prices[indexOfInterest].price;
+    var lastUpdated = main_array.prices[indexOfInterest].lastupdated;
     console.log({ the_price });
+    console.log({ lastUpdated });
 
     let resultsSlot = document.createElement("div");
     resultsSlot.setAttribute("class", `station-index-${indexOfInterest}`);
@@ -354,7 +432,7 @@ async function displayResult(main_array) {
         </table>
 
         </p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        <p class="card-text"><small class="text-muted">Last price change at: ${lastUpdated}</small></p>
       </div>
     </div>
   </div>
@@ -373,17 +451,33 @@ async function displayResult(main_array) {
 
  
 
+  appendSearchAgainButton();
 
-  // Append search again button at end
-  const searchAgainBtn = document.createElement("button");
-  searchAgainBtn.innerHTML = "Search again";
-  searchAgainBtn.setAttribute("type", "submit");
-  searchAgainBtn.setAttribute("id", "search-again-btn");
 
-  searchAgainBtn.setAttribute("onClick", "window.location.reload();");
 
-  resultsContainer.appendChild(searchAgainBtn);
 }
+
+
+function appendSearchAgainButton(){
+  // Append search again button at end
+  const stickPanelBottom = document.createElement("div");
+  stickPanelBottom.style.setProperty("class","text-center")
+  document.getElementById("results-container").appendChild(stickPanelBottom)
+  
+    const searchAgainBtn = document.createElement("button");
+    searchAgainBtn.innerHTML = "Search again";
+    searchAgainBtn.setAttribute("type", "submit");
+    searchAgainBtn.setAttribute("id", "search-again-btn");
+  
+    searchAgainBtn.setAttribute("onClick", "window.location.reload();");
+  
+    resultsContainer.appendChild(searchAgainBtn);
+
+}
+
+
+
+
 
 async function runSearch() {
 
@@ -625,8 +719,13 @@ async function runApp() {
   var namedLocation = "Canterbury Leisure and Aquatic Centre";
   // I assume namedLocation can be whatever you want and does not have to be an actual postcode or something?
 
-  var latitude = "-33.9104";
-  var longitude = "151.1136";
+  // Sydney CBD??
+  // var latitude = "-33.9104";
+  // var longitude = "151.1136";
+   
+  // Tibooburra
+  var latitude = "-29.4343";
+  var longitude = "142.0101";
   // var latitude;
   // var longitude;
   // 10km
@@ -675,4 +774,8 @@ async function runApp() {
 
   runApp();
 });
+
+
+
+
 
