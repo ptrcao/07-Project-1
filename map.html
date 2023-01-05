@@ -6,20 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-    <link rel="stylesheet" type="text/css" href="/develop/map.css" />
-    <script type="module" src="/develop/map.js"></script>
+    <link rel="stylesheet" type="text/css" href="assets/map.css" />
+    <script type="module" src="assets/index-geo-api.js"></script>
     <title>Fuel Maps</title>
 </head>
 <body>
     <h1> Fuel Maps</h1>
+   <!-- <p id = "location">Location </p> -->
     <div id="map"></div>
     
     
+
+
+    <script  
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDD-ZKd1E6dtFqQzmmTWiH7crVwjDeLjdA&callback=initMap" async defer></script>
     
-    <script async defer 
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDD-ZKd1E6dtFqQzmmTWiH7crVwjDeLjdA&callback=initMap">
-    </script>
     
+    <button id ="btn-search">Click for results</button>
+
+    <select id="radius-select" data-trigger="" name="choices-single-defaul">
+        <option placeholder="" value="">Radius (km)</option>
+        <option> 5 km</option>
+        <option>10 km</option>
+        <option>15 km</option>
+        <option>20 km</option>
+        <option>25 km</option>
+        <option>30 km</option>
+        <option>50 km</option>
+        <option>Unlimited</option>
+      </select>
 
 </body>
 </html>

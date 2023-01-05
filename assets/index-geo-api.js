@@ -1,36 +1,43 @@
+
+var myLat = null;
+var myLng = null;
+var myLatLng = null;
+
+
 //gets users location
 navigator.geolocation.getCurrentPosition(
   function (position) {
-     initMap(position.coords.latitude, position.coords.longitude)
+     //initMap(position.coords.latitude, position.coords.longitude)
+     myLat= position.coords.latitude;
+     myLng= position.coords.longitude;
+     myLatLng ={lat: myLat, lng: myLng};
+     console.log(myLat);
+     console.log(myLng);
+     console.log(myLatLng);
   },
   function errorCallback(error) {
      console.log(error)
   }
 );
 
-// initiates Map and stores the user geolocation into variable
-function initMap(lat, lng) {
-    var myLatLng = {
-     lat,
-     lng
-};
-  //centre map to the users current location
-   var map = new google.maps.Map(document.getElementById('map'), {
-   zoom: 12,
-   center: myLatLng
-   }
+// initiates Map and centres to user location
+function initMap() {
+   
+      var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: myLatLng,
+      }
 );
 
-  //Add Users location marker if location permissions accepted
+    //Add Users location marker if location permissions accepted
      var UserMarker = new google.maps.Marker({
      position: myLatLng,
      map: map,
      title: "My Location",
-
-  }
+      }
 );
 
-// adds radius around user location. This is defaulted before the user selects paramaters. Can change to toggle with radius selection.
+     // adds radius around user location. This is defaulted before the user selects paramaters. Can change to toggle with radius selection.
      var circle = new google.maps.Circle({
      center: myLatLng,
      map: map,
@@ -40,7 +47,8 @@ function initMap(lat, lng) {
      strokeColor: "#FF0000",
      strokeWeight: 2,         
      editable: false
-});
+      }
+);
 
 
 
