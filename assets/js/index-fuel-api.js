@@ -379,17 +379,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add fuel types for form
       var fuelTypes = data.fueltypes;
+   
       console.log({ fuelTypes });
 
       for (let i = 0; i < fuelTypes.items.length; ++i) {
+
+
         fuelName = fuelTypes.items[i].name;
         fuelCode = fuelTypes.items[i].code;
         console.log({ fuelName });
         console.log({ fuelCode });
-
+        if(fuelName != 'Ethanol 94 / Unleaded 91' && fuelName != 'Premium 95 / Premium 98' && fuelName != 'Diesel / Premium Diesel' && fuelName != 'CNG/NGV' && fuelName != 'Hydrogen' && fuelName != 'LNG'){
         fuelSelect.add(new Option(fuelName, fuelCode));
         // https://www.javascripttutorial.net/javascript-dom/javascript-add-remove-options/
         // https://stackoverflow.com/a/73725875/9095603
+        }
       }
 
       // Add fuel brands - you will use all of them automatically in the search
@@ -785,6 +789,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // END HERE )
       let data = await response.json();
       // is .json the same as JSON.parse() ?
+
+
+
+
+
+
+
+
+
 
       // example of storage of an object in localStorage without serializing it first; it will appear as an undefined object
       // localStorage.setItem("finalResponse", response);
