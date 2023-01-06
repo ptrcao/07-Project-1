@@ -52,7 +52,7 @@ async function initMap(main_array) {
 var circle = new google.maps.Circle({
  center: myLatLng,
  map: map,
- radius: 5000,          
+ radius: radiusM,          
  fillColor: '#FF6600',
  fillOpacity: 0.2,
  strokeColor: "#FF0000",
@@ -110,7 +110,7 @@ var circle = new google.maps.Circle({
 
 
 //loop through array
-for (var i = 0; i < main_array.stations.length; i++)
+for (var i = 0; i < countOfReturnedResults; i++)
 addFuelMarkers(main_array.stations[i]);
 
 // add marker function using api call
@@ -118,7 +118,7 @@ function addFuelMarkers(property){
  const marker = new google.maps.Marker({
  position: {lat: property.location.latitude, lng:property.location.longitude},
  icon:"http://maps.google.com/mapfiles/kml/shapes/gas_stations.png",
- label: 'add rank',
+ label: (i+1).toString(),
  map: map, // put the map on the map (  can also do marker.setMap(map);)
  title: property.name +  "Price:" + property.location.distance,
 });
@@ -549,21 +549,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    var resultsCountEle = document.createElement("div");
+    var resultsCountEle = document.createElement("h2");
 
     // be careful to ensure this limit is limiting to the TOP 10 results and not to the BOTTOM 10
     if (main_array.stations.length > 10) {
       countOfReturnedResults = 10;
-      resultsCountEle.innerText = `10 results returned (actually ${main_array.stations.length} found, but limited to best 20):`;
+      resultsCountEle.innerHTML = `10 results returned (actually ${main_array.stations.length} found, but limited to best 10):`;
     } else if (
       main_array.stations.length > 0 &&
       main_array.stations.length <= 10
     ) {
       countOfReturnedResults = main_array.stations.length;
-      resultsCountEle.innerText = `${main_array.stations.length} results found:`;
+      resultsCountEle.innerHTML = `${main_array.stations.length} results found:`;
     } else if (main_array.stations.length <= 0) {
       countOfReturnedResults = 0;
-      resultsCountEle.innerText = `No results found. Try relaxing or broadening your search parameters.`;
+      resultsCountEle.innerHTML = `No results found. Try relaxing or broadening your search parameters.`;
       // unlike the conditions above, the append elements are required here because the program will now exit
       resultsContainer.appendChild(resultsCountEle);
       appendSearchAgainButton();
@@ -572,15 +572,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resultsContainer.appendChild(resultsCountEle);
 
-    var bigMap = document.createElement("img");
+    // var bigMapContainer = document.createElement("div");
+    // bigMapContainer.setAttribute("class","row")
+
+    var bigMap = document.createElement("div");
     // bigMap.setAttribute("src", "assets/images/example-big-map.png");
     // bigMap.setAttribute("alt", "Summary map");
     bigMap.setAttribute("id","map")
+    bigMap.setAttribute("class","img-fluid")
 
-    resultsContainer.appendChild(bigMap);
-
+    // resultsContainer.appendChild(bigMapContainer);
+    // bigMapContainer.appendChild(bigMap)
    
-
+    resultsContainer.appendChild(bigMap);
 
     /* BIG MAP GOES HERE */
 
@@ -661,9 +665,13 @@ document.addEventListener("DOMContentLoaded", () => {
       resultsSlot.innerHTML = `
 
 
-
+      <style>
+   
+      
+      </style>
 
 <div id="${main_array.stations[i].code}" class="card mb-3" style="max-width: 768px;">
+
   <div class="row g-0">
     <div class="col-md-6">
       <!-- for Dylan's little maps class = "map", and id = "map1"+ -->
@@ -671,7 +679,9 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     <div class="col-md-6">
       <div class="card-body">
-        
+
+      <span id="favourite-tag">favourite<div><i class="fa-solid fa-heart"></i></div></span>
+
         <h5>Rank #${rank} by ${sortByWhat}</h5>
         <h3>${main_array.stations[i].name}</h3>
 
@@ -690,21 +700,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         </p>
         <p class="card-text"><small class="text-muted">Last price change at: ${lastUpdated}</small></p>
-        <p class="card-text">&#x2764; Save to favourites</p>
+        <button id="${main_array.stations[i].code}-save-btn" type="button">&#x2764; Save to favourites</button>
+        <button id="${main_array.stations[i].code}-unsave-btn" type="button">&#x1F494; Remove from favourites</button>
+        <p class="card-text"><small><a href="#">View and manage favourites</a></small></p>
       </div>
     </div>
   </div>
 </div>
 `;
 
-      // Limit the number of results returned
-      // Warn the user when no results inside radius; in that case, the 10 next closest will be returned by the API
-      // if (main_array.stations[i].location.distance > 10) {
-      //   console.log("Outside of 10km");
-      // }
+  toggleSaveToFav(main_array.stations[i].code);
 
-      // if (main_array.stations[i].location.distance <= radius) {
-      // }
+
     }
 
     appendSearchAgainButton();
@@ -812,12 +819,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       await displayResult(data);
       // window.initMap = initMap;
-      // await initMap(data);
+      await initMap(data);
       await generateSmallMaps(data);
       loadingOverlayOff();
     } catch (err) {
       console.log(err);
-      console.log(5);
     }
     //   } else {
     //     console.log("Using localStorage data");
@@ -1102,8 +1108,23 @@ function showError(error) {
 
 
 
-  
+  function toggleSaveToFav(cardId){
 
+    console.log({cardId})
+
+    var saveToFavBtn = document.getElementById(`${cardId}-save-btn`)
+    console.log({saveToFavBtn})
+    saveToFavBtn.addEventListener("click",function(){
+      saveToFavBtn.style.setProperty("display","none")
+    })
+
+    var unSaveToFavBtn = document.getElementById(`${cardId}-unsave-btn`)
+    console.log({unSaveToFavBtn})
+    unSaveToFavBtn.addEventListener("click",function(){
+      unSaveToFavBtn.style.setProperty("display","none")
+    })
+
+  }
 
 
 
