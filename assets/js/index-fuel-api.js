@@ -215,8 +215,8 @@ UserMarker;
   // I assume namedLocation can be whatever you want and does not have to be an actual postcode or something?
 
   // Sydney CBD??
-  var latitude = "-33.9104";
-  var longitude = "151.1136";
+  // var latitude = "-33.9104";
+  // var longitude = "151.1136";
 
   
 
@@ -224,15 +224,19 @@ UserMarker;
   // var latitude = "-29.4343";
   // var longitude = "142.0101";
 
-  // var latitude;
-  // var longitude;
+  var latitude;
+  var longitude;
   // 10km
   // [{long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}]
 
   // Fire modal if geolocation unavailable
-  if (!latitude || !longitude) {
-    geolocMissingModal.show();
-  } else {
+  // if (!latitude || !longitude) {
+  //   geolocMissingModal.show();
+  // } else 
+  
+  
+  if (latitude && longitude)
+  {
     // Display geoloc coordinates
 
     var h1HeadingEle = document.getElementById("main-h1");
@@ -1059,6 +1063,7 @@ async function getLocation() {
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition,showError);
+
   } else {
     y.innerHTML = "Geolocation is not supported by this browser.";
     geolocMissingModal.show()
@@ -1066,6 +1071,16 @@ async function getLocation() {
 }
 
 function showPosition(position) {
+
+
+  latitude = position.coords.latitude;
+  latitude = latitude.toString()
+  console.log({latitude})
+  longitude = position.coords.longitude;
+  longitude = longitude.toString()
+  console.log({longitude})
+
+
   x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;    
 }
 
