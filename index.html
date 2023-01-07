@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Fuel Seeker</title>
+  <title>Fuel Seeker NSW</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="assets/css/index.css" rel="stylesheet">
 
@@ -16,7 +16,8 @@
 
   <!-- Google fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inspiration&display=swap" rel="stylesheet">
-  <style> @import url('https://fonts.googleapis.com/css2?family=Inspiration&display=swap'); </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+  
 
 </head>
 <body>
@@ -77,28 +78,28 @@
 
 
 <div class="container row" id="search-parent-container">
-  <h1 id="main-h1">Fuel Seeker</h1>
+  <h1 id="main-h1">Fuel Seeker <span id="nsw-img">NSW</span></h1>
 
-<p class="result-count">Welcome motorist!</p>  
+<p class="result-count"><span class="dark-highlighted">Welcome motorist!</span></p>  
 
-<p>Here you can search a complete database of <span style="font-weight:bold;" id="station-count"></span> refueling stations in the state of <span style="font-weight:bold;">NSW, Australia</span>, and you will be presented with <span style="font-weight:bold;">up-to-date pricing, maps and directions</span> for relevant results.  Results are <span style="font-weight:bold;">limited to 10 stations</span>, and can be <span style="font-weight:bold;">sorted by either fuel price or distance</span>.</p>
-<p>To begin, please select your search parameters.  All options are required.</p>
+<p><span class="dark-highlighted">Here you can search a complete database of <span style="font-weight:bold;" id="station-count"></span> refueling stations in the state of <span style="font-weight:bold;">NSW, Australia</span>, and you will be presented with <span style="font-weight:bold;">up-to-date pricing, maps and directions</span> for relevant results.  Results are <span style="font-weight:bold;">limited to 10 stations</span>, and can be <span style="font-weight:bold;">sorted by either fuel price or distance</span>.</span></p>
+<p><span class="dark-highlighted">To begin, please select your search parameters.  All options are required.</span></p>
 
-<small>*Note that the price will be displayed as "0 cents/L" for electric vehicle charging stations.  However, the actual cost in $/kWh is not available via the API at this time.</small>
+<p><span class="dark-highlighted"><small>*Note that the price will be displayed as "0 cents/L" for electric vehicle charging stations.  However, the actual cost in $/kWh is not available via the API at this time.</small></span></p>
 
 <div class="dropdown">
 <form>
   <fieldset class="p-2">
-    <legend>Select Option 1. Fuel type:</legend>
-  <label for="fuel-select">What style of fuel do you seek?</label>
+    <legend><span class="dark-highlighted">Select Option 1. Fuel type:</span></legend>
+  <label class="dark-highlighted" for="fuel-select">What type of fuel do you seek?</label>
   <select id="fuel-select" class="form-select form-select-lg">
     <option value='' disabled selected>Fuel type</option>
   </select>
 </fieldset>
 
 <fieldset class="p-2">
-  <legend>Select Option 2. Radius (km):</legend>
-  <label for="radius-select">How far are you willing to travel to a fuel stop?</label>
+  <legend><span class="dark-highlighted">Select Option 2. Radius (km):</span></legend>
+  <label class="dark-highlighted" for="radius-select">How far are you willing to travel to a fuel stop?</label>
   <select id="radius-select" class="form-select form-select-lg">
     <option value='' disabled selected>Radius (km)...</option>
     <option value="5">Within 5 km</option>
@@ -113,8 +114,8 @@
   </select>
 </fieldset>
 <fieldset class="p-2">
-  <legend>Select Option 3. ASC Sort by:</legend>
-  <label for="ranking-select">How should we sort your results?</label>
+  <legend><span class="dark-highlighted">Select Option 3. Ascending Sort by:</span></legend>
+  <label class="dark-highlighted" for="ranking-select">How should we sort your results?</label>
   <select id="ranking-select" class="form-select form-select-lg">
     <option value='' disabled selected>ASC Sort by</option>
     <!-- <option value="Price">Price ASC</option>
@@ -123,42 +124,14 @@
 </fieldset>
 
 
-    <br>
-    <button type="reset" class="btn btn-secondary btn-lg"><i class="fa-solid fa-arrow-rotate-left"></i> RESET</button> 
-    <button id="fetch" type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-magnifying-glass"></i> Find stations</button>
-
+<div class="d-flex p-2 justify-content-end">
+    <button type="reset" class="btn btn-secondary btn-lg"><i class="fa-solid fa-arrow-rotate-left"></i> RESET</button>&nbsp; 
+    <button id="fetch" type="submit" class="btn btn-dark btn-lg"><i class="fa-solid fa-magnifying-glass"></i> Find stations</button>
+</div>
   </form>
 
 </div>
 </div>
-
-<!-- Bootstrap modal: https://getbootstrap.com/docs/4.0/components/modal/ -->
-
-<!-- Modal -->
-<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div id="modal-body" class="modal-body">
-        <span id="missing-text-before"></span>
-        <ul id="missing-inputs" style="list-style-type:none;">
-        </ul>
-        <span id="missing-text-after"></span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
-
 
 
 <div class="container row">
@@ -191,6 +164,13 @@
 
 </div>
 
+<!-- <footer class="bg-light text-center text-lg-start"> -->
 
+  <footer class="text-center pt-3 pr-3 pl-3 pb-3" style="background-color: rgba(0, 0, 0, 0.6);">
+  <!-- Copyright -->
+    <small>Disclaimer #1: this website does not purport to represent the NSW Government. Disclaimer #2: use at your own risk; FuelSeeker accepts no liabilities, and makes no guarantees on the accuracy of information on this website. | Image attributions as follows.  <a href="https://www.freepik.com/free-vector/cartoon-style-gas-station-background_21888165.htm">Image by pikisuperstar</a> on Freepik.  New South Wales by Support Designs from <a href="https://thenounproject.com/browse/icons/term/new-south-wales/" target="_blank" title="New South Wales Icons">Noun Project</a></small>. | © 2023 Copyright FuelSeeker
+
+  <!-- Copyright -->
+</footer>
 </body>
 </html>

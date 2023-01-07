@@ -22,7 +22,6 @@ var map;
 
 // initiates Map and stores the user geolocation
 
-
 async function initMap(main_array) {
 
 
@@ -445,6 +444,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
         console.log(fuelType);
+        fuelTypeInnerText = fuelOptionEle.options[fuelOptionEle.selectedIndex].innerText;
+        console.log(fuelTypeInnerText);
+        // fuelTypeInnerText is only specifically used in the results to recall what the user chose.  It is not used anywhere else
 
         radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
         console.log(radius);
@@ -557,21 +559,66 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    /* work in progress on sticky bar */
+    var topStickyBar = document.createElement("div");
     var resultsCountEle = document.createElement("h2");
+    
+
+    topStickyBar.setAttribute('id', 'navbar');
+    // topStickyBar.innerHTML = 'this is sticky bar';
+    topStickyBar.classList.add('fixed-bottom','text-center');
+
+    var body = document.getElementsByTagName('body')[0];
+    
+    // existingNode.parentNode.insertBefore(newNode, existingNode);
+    // resultsContainer.parentNode.insertBefore(topStickyBar, resultsContainer);
+
+    // body.prepend(topStickyBar);
+    // body.append(topStickyBar);
+    var footer = document.getElementsByTagName('footer')[0]
+
+    footer.parentNode.insertBefore(topStickyBar, footer.nextSibling);
+
+    var topStickyBarCreated = document.getElementById('navbar')
+
+    const searchAgainBtn = document.createElement("button");
+    searchAgainBtn.innerHTML = "Search again";
+    searchAgainBtn.setAttribute("type", "submit");
+    searchAgainBtn.setAttribute("id", "search-again-btn");
+    searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg", "m-2");
+
+    searchAgainBtn.setAttribute("onClick", "window.location.reload();");
+
+    topStickyBarCreated.appendChild(searchAgainBtn)
+
+    var searchAgainMsg = document.createElement('span')
+    searchAgainMsg.setAttribute("id", "search-again-msg");
+    searchAgainMsg.innerHTML = "Don't like your results? Try again with different search parameters:";
+
+    topStickyBarCreated.insertBefore(searchAgainMsg, searchAgainBtn);
+
+    // FIX STICKY OVERLAP, otherwise footer will be covered
+    // For full responsive solution you would need either javascript, or flex, but 100px works for the worst case scenario, so it works
+ 
+    footer.classList.remove('pb-3')
+    footer.style.paddingBottom = "100px";
+    
+    
+
 
     // be careful to ensure this limit is limiting to the TOP 10 results and not to the BOTTOM 10
     if (main_array.stations.length > 10) {
       countOfReturnedResults = 10;
-      resultsCountEle.innerHTML = `10 results returned (actually ${main_array.stations.length} found, but limited to best 10):`;
+      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
     } else if (
       main_array.stations.length > 0 &&
       main_array.stations.length <= 10
     ) {
       countOfReturnedResults = main_array.stations.length;
-      resultsCountEle.innerHTML = `${main_array.stations.length} results found:`;
+      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
     } else if (main_array.stations.length <= 0) {
       countOfReturnedResults = 0;
-      resultsCountEle.innerHTML = `No results found. Try relaxing or broadening your search parameters.`;
+      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: No results found. Try broadening your search parameters.`;
       // unlike the conditions above, the append elements are required here because the program will now exit
       resultsContainer.appendChild(resultsCountEle);
       appendSearchAgainButton();
@@ -587,8 +634,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // bigMap.setAttribute("src", "assets/images/example-big-map.png");
     // bigMap.setAttribute("alt", "Summary map");
     bigMap.setAttribute("id","map")
-    bigMap.setAttribute("class","img-fluid")
-
+    bigMap.classList.add('img-fluid', 'card', 'mb-3'); 
     // resultsContainer.appendChild(bigMapContainer);
     // bigMapContainer.appendChild(bigMap)
    
@@ -728,17 +774,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function appendSearchAgainButton() {
     // Append search again button at end
     const stickPanelBottom = document.createElement("div");
-    stickPanelBottom.style.setProperty("class", "text-center");
-    document.getElementById("results-container").appendChild(stickPanelBottom);
+    // stickPanelBottom.classList.add("text-center", "btn-dark", "btn-lg");
+    document.body.appendChild(stickPanelBottom);
 
     const searchAgainBtn = document.createElement("button");
     searchAgainBtn.innerHTML = "Search again";
     searchAgainBtn.setAttribute("type", "submit");
     searchAgainBtn.setAttribute("id", "search-again-btn");
+    searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg");
 
     searchAgainBtn.setAttribute("onClick", "window.location.reload();");
 
-    resultsContainer.appendChild(searchAgainBtn);
+    // topStickyBar.appendChild(searchAgainBtn);
   }
 
   async function runSearch() {
@@ -1081,7 +1128,7 @@ function showPosition(position) {
   console.log({longitude})
 
 
-  x.innerHTML = `<i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude} }`;
+  x.innerHTML = `<p><em><i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude} }</em></p>`;
 }
 
 function showError(error) {

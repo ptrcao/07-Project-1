@@ -1,3 +1,52 @@
+  .card{
+    margin: 0 auto; /* Added */
+  }
+  
+.search-terms{
+  font-size:110%;
+  background: lightgrey;
+  padding: 4px;
+  color: black;
+}
+
+#navbar{
+  background:white;
+}
+
+  body{
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0) 20%,
+    rgba(255,255,255,1)), url("../images/21888165_6505910\ freepik\ gas\ station.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .dark-highlighted{
+    color:white;
+    background-color:RGBA(42,39,39,0.50); 
+    padding: 4px;
+  }
+
+  /* Force white text */
+  #results-container h2, #main-h1, #getLocationOutput, footer, footer a{
+    color: white;
+  }
+
+  #nsw-img{
+    background-image: url("../images/noun-new-south-wales-1951387.png");
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width:110px;
+    height:100px;
+    font-family: var(--bs-font-sans-serif);
+    padding: 6px;
+    }
+
+#main-h1{
+  font-family: 'Rock Salt', cursive;
+}
+
   /* https://stackoverflow.com/a/61054967/9095603 */
   
   .overlay {
@@ -20,14 +69,14 @@
 } */
   /* sticky navbar or button */
 
-  #search-again-btn{
-    position: sticky;
+  /* #search-again-btn{
+    position: fixed;
     padding: 5px;
     font-size: 16px;
     border-radius: 10px;
     bottom: 1rem;
     left: 100%;
-  }
+  } */
 
   
 
@@ -47,9 +96,9 @@
 /* 
  * Optional: Makes the sample page fill the window. 
  */
-html,
+/* html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
-}
+} */
