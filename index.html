@@ -32,7 +32,7 @@
 
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
-<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -54,7 +54,7 @@
 
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
-<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -79,14 +79,28 @@
 <div class="container row" id="search-parent-container">
   <h1 id="main-h1">Fuel Seeker</h1>
 
+<p class="result-count">Welcome motorist!</p>  
 
+<p>Here you can search a complete database of <span style="font-weight:bold;" id="station-count"></span> refueling stations in the state of <span style="font-weight:bold;">NSW, Australia</span>, and you will be presented with <span style="font-weight:bold;">up-to-date pricing, maps and directions</span> for relevant results.  Results are <span style="font-weight:bold;">limited to 10 stations</span>, and can be <span style="font-weight:bold;">sorted by either fuel price or distance</span>.</p>
+<p>To begin, please select your search parameters.  All options are required.</p>
+
+<small>*Note that the price will be displayed as "0 cents/L" for electric vehicle charging stations.  However, the actual cost in $/kWh is not available via the API at this time.</small>
+
+<div class="dropdown">
 <form>
-  <select id="fuel-select" data-trigger="" name="">
-    <option placeholder="" value="">Fuel type - Required</option>
+  <fieldset class="p-2">
+    <legend>Select Option 1. Fuel type:</legend>
+  <label for="fuel-select">What style of fuel do you seek?</label>
+  <select id="fuel-select" class="form-select form-select-lg">
+    <option value='' disabled selected>Fuel type</option>
   </select>
+</fieldset>
 
-  <select id="radius-select" data-trigger="">
-    <option placeholder="" value="">Within radius (km); unlimited by default</option>
+<fieldset class="p-2">
+  <legend>Select Option 2. Radius (km):</legend>
+  <label for="radius-select">How far are you willing to travel to a fuel stop?</label>
+  <select id="radius-select" class="form-select form-select-lg">
+    <option value='' disabled selected>Radius (km)...</option>
     <option value="5">Within 5 km</option>
     <option value="10">Within 10 km</option>
     <option value="15">Within 15 km</option>
@@ -94,29 +108,34 @@
     <option value="25">Within 25 km</option>
     <option value="30">Within 30 km</option>
     <option value="50">Within 50 km</option>
-    <option value="unlimited">Unlimited by radius (km)</option>
+    <option value="100">Within 100 km</option>
+    <option value="200">Within 200 km</option>
   </select>
-
-  <select  id="ranking-select" data-trigger="">
-    <option placeholder="" value="">ASC Sort by - Required</option>
+</fieldset>
+<fieldset class="p-2">
+  <legend>Select Option 3. ASC Sort by:</legend>
+  <label for="ranking-select">How should we sort your results?</label>
+  <select id="ranking-select" class="form-select form-select-lg">
+    <option value='' disabled selected>ASC Sort by</option>
     <!-- <option value="Price">Price ASC</option>
     <option value="Distance">Distance ASC</option> -->
   </select>
+</fieldset>
 
-  <div class="result-count">
-    Search from <span id="station-count"></span> stations across NSW</div>
-  <div>*Note that the price will be displayed as "0 cents/L" for electric vehicle charging stations.  However, the actual cost in $/kWh is not available via the API at this time.</div>
 
-    <button type="reset">RESET</button>
-    <button id="fetch" type="submit">Find stations</button>
+    <br>
+    <button type="reset" class="btn btn-secondary btn-lg"><i class="fa-solid fa-arrow-rotate-left"></i> RESET</button> 
+    <button id="fetch" type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-magnifying-glass"></i> Find stations</button>
+
   </form>
 
 </div>
- 
+</div>
+
 <!-- Bootstrap modal: https://getbootstrap.com/docs/4.0/components/modal/ -->
 
 <!-- Modal -->
-<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">

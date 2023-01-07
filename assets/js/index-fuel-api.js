@@ -120,7 +120,7 @@ function addFuelMarkers(property){
  icon:"http://maps.google.com/mapfiles/kml/shapes/gas_stations.png",
  label: (i+1).toString(),
  map: map, // put the map on the map (  can also do marker.setMap(map);)
- title: property.name +  "Price:" + property.location.distance,
+ title: property.name +  ", Price: " + property.location.distance,
 });
  
 
@@ -211,7 +211,7 @@ UserMarker;
 
   // Geolocation API
 
-  var namedLocation = "Canterbury Leisure and Aquatic Centre";
+  var namedLocation = "Some location";
   // I assume namedLocation can be whatever you want and does not have to be an actual postcode or something?
 
   // Sydney CBD??
@@ -1081,7 +1081,7 @@ function showPosition(position) {
   console.log({longitude})
 
 
-  x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;    
+  x.innerHTML = `<i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude} }`;
 }
 
 function showError(error) {
