@@ -393,7 +393,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Dynamically display number of stations
       document.getElementById("station-count").innerText =
-        data.stations.items.length;
+      data.stations.items.length.toLocaleString();
+      // n.toLocaleString() to format a number with commas as thousands separators
+      // https://stackoverflow.com/a/17663871/9095603
     } catch (error) {
       console.log(error);
     }
