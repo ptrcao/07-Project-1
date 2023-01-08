@@ -441,13 +441,13 @@ document.addEventListener("DOMContentLoaded", () => {
           var missingArray = [];
 
           if (!fuelType) {
-            missingArray.push("Fuel type");
+            missingArray.push("Option 1. Fuel type");
           }
           if (!radius) {
-            missingArray.push("Radius");
+            missingArray.push("Option 2. Radius");
           }
           if (!sortByWhat) {
-            missingArray.push("Sort by");
+            missingArray.push("Option 3. Sort by");
           }
 
           for (var i = 0; i < missingArray.length; i++) {
@@ -486,11 +486,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+// DISABLE "sort by Price" option for EV fuel type because this is not a meaningful setting since EV price is always $0, due to the API not having data for EV prices
+
 async function addEventListenerToEVFuelOption(){
 
   document.querySelector('#fuel-select').addEventListener("change", function() {
     if (this.value == "EV") {
       console.log('EV selected');
+
+      // Reset the option to index 0 in case the user had already selected price - importantly, if this is not done, the user would be able to submit the search with price selected
+      document.getElementById('ranking-select').selectedIndex = 0;
+
       document.querySelector("#ranking-select option[value='Price']").setAttribute('disabled', '')
       document.querySelector("#price-disable-EV").style.display = "inline";
       document.querySelector("#no-price-warning-EV").style.display = "inline";
@@ -897,7 +903,11 @@ async function addEventListenerToEVFuelOption(){
   async function runApp() {
     loadingOverlayOn();
    
-    
+    // Output current year to copyright stamp
+    // Get the current year in JavaScript
+    // https://stackoverflow.com/a/6002276/9095603
+    document.getElementById("current-year").innerHTML = new Date().getFullYear();
+
     
     // geoloc Modal Element
     // container for the dynamically-generated error in the modal
