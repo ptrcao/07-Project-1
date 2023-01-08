@@ -445,7 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
             missingArray.push("Radius");
           }
           if (!sortByWhat) {
-            missingArray.push("Rank by");
+            missingArray.push("Sort by");
           }
 
           for (var i = 0; i < missingArray.length; i++) {
@@ -471,7 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ).innerHTML = `Please try again after you have made your selection${plural}.`;
           document.getElementById(
             "exampleModalLongTitle"
-          ).innerHTML = `Missing selection${plural}!`;
+          ).innerHTML = `<i class="fas fa-exclamation-triangle"></i> Missing selection${plural}!`;
 
           // Fire the modal
           inputMissingModal.show();
