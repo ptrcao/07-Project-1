@@ -234,20 +234,10 @@ UserMarker;
   // } else 
   
   
-  if (latitude && longitude)
-  {
-    // Display geoloc coordinates
 
-    var h1HeadingEle = document.getElementById("main-h1");
-    const geoCoordinates = document.createElement("div");
-    geoCoordinates.innerHTML = `Your detected device geocoordinates are: latitude <span id="user-latitude">${latitude}</span>, longitude <span id="user-longitude">${longitude}</span>.`;
-    h1HeadingEle.parentNode.insertBefore(
-      geoCoordinates,
-      h1HeadingEle.nextSibling
-    );
     // If referenceNode is the last child within its parent element, that's fine, because referenceNode.nextSibling will be null and insertBefore handles that case by adding to the end of the list.
     // https://stackoverflow.com/a/4793630/9095603
-  }
+  
 
   // RESET form
   // https://www.geeksforgeeks.org/how-to-reset-all-form-values-using-a-button-in-html/
@@ -266,22 +256,6 @@ UserMarker;
   var fuelType;
   var radius;
   var sortByWhat;
-
-  // console.log({globalAccessToken})
-  //   setTimeout(wait5,5000);
-  //   function wait5(){
-  //     remainingFetch();
-  //   }
-  
-
-
-
-
-
-
-
-
-
 
 
 
@@ -372,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
 
-      console.log("check line 295: " + response);
+      console.log({response});
       let data = await response.json();
       // IF YOU DO
       // .then((response) => {
@@ -450,13 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
         console.log(radius);
-        if (!radius) {
-          // if no selection is made
-          // then set the value of radius to empty
-          radius = "";
-          // and automatically select unlimited dropdown option for the user
-          radiusOptionEle.value = "unlimited";
-        }
+
         if (radius) {
           radiusM = radius * 1000;
         }
@@ -467,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Add missing inputs modal
         // if (!fuelType || !radius || !sortByWhat) {
-        if (!fuelType || !sortByWhat) {
+        if (!fuelType || !radius || !sortByWhat) {
           // Clear out any previous error messages
           document.getElementById("missing-text-before").innerHTML = "";
           document.getElementById("missing-inputs").innerHTML = "";
@@ -522,6 +490,39 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+async function addEventListenerToEVFuelOption(){
+
+  document.querySelector('#fuel-select').addEventListener("change", function() {
+    if (this.value == "EV") {
+      console.log('EV selected');
+      document.querySelector("#ranking-select option[value='Price']").setAttribute('disabled', '')
+      document.querySelector("#price-disable-EV").style.display = "inline";
+      document.querySelector("#no-price-warning-EV").style.display = "inline";
+    }else if(this.value != "EV"){
+       console.log('NOT EV selected');
+       document.querySelector("#ranking-select option[value='Price']").removeAttribute('disabled', '')
+       // If the attribute is present at all, regardless of the value, its value is considered to be true.
+       // If a boolean attribute is not present, the value of the attribute is considered to be false.
+       // If you need to remove an attribute, use the removeAttribute method.
+       // https://bobbyhadz.com/blog/javascript-set-attribute-disabled#:~:text=Set%20the%20disabled%20Attribute%20using%20JavaScript%20%23%20To,will%20add%20the%20disabled%20attribute%20to%20the%20element.
+       document.querySelector("#price-disable-EV").style.display = "none";
+       document.querySelector("#no-price-warning-EV").style.display = "none";
+    }
+  });
+
+}
+
+// document.querySelector('#fuel-select').addEventListener("change", function() {
+//   if (this.value != "NOT EV selected") {
+//     document.querySelector("option[value='EV']").setAttribute('enabled', '')
+//   }else{
+//      console.log('EV selected');
+//   }
+// });
+
+// }
+
 
   async function displayResult(main_array) {
     console.log({ main_array });
@@ -842,45 +843,6 @@ document.addEventListener("DOMContentLoaded", () => {
       // is .json the same as JSON.parse() ?
 
 
-
-
-
-
-
-
-
-
-      // example of storage of an object in localStorage without serializing it first; it will appear as an undefined object
-      // localStorage.setItem("finalResponse", response);
-      // Now if we stringify it, it should be in the correct format for localStorage
-      localStorage.setItem("serializedResponse", JSON.stringify(response));
-
-      localStorage.setItem("Response", response);
-      localStorage.setItem("data", data);
-      // // retrieving the serializedResponse
-      // var myObj = localStorage.getItem("serializedResponse");
-      // console.log("Before JSON.parse(): ", myObj);
-      // console.table("Before JSON.parse(): ", myObj);
-
-      // let myObjDeserialized = JSON.parse(
-      //   localStorage.getItem("serializedResponse")
-      // );
-      // console.log("After JSON.parse(): ", myObjDeserialized);
-      // console.table("After JSON.parse(): ", myObjDeserialized);
-
-      // console.log(myObjDeserialized);
-      // console.table(myObjDeserialized);
-      // console.log(myObjDeserialized.stations[0].location.distance);
-      // console.table(myObjDeserialized.stations[0].location.distance);
-
-      // console.log(myObjDeserialized.prices);
-      // console.table(myObjDeserialized.prices);
-      // console.log(myObjDeserialized.stations[7].stationid);
-      // console.table(myObjDeserialized.stations[7].stationid);
-
-      // console.log(myObjDeserialized.prices[3].price);
-      // console.table(myObjDeserialized.prices[3].price);
-
       await displayResult(data);
       // window.initMap = initMap;
       await initMap(data);
@@ -941,7 +903,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function runApp() {
     loadingOverlayOn();
-    // isLoading = true;
+   
     
     
 
@@ -971,11 +933,11 @@ document.addEventListener("DOMContentLoaded", () => {
     credentials = await getCredentials();
     console.log("credentials in runApp(): " + credentials);
 
-    await Promise.all([populateForm(credentials), attachListenerToButton()]);
+    await Promise.all([populateForm(credentials), attachListenerToButton(), addEventListenerToEVFuelOption()]);
     // https://stackoverflow.com/a/35612484/9095603
 
     loadingOverlayOff();
-    // isLoading = false;
+
   }
 
 

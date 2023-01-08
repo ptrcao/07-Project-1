@@ -9,6 +9,11 @@
   color: black;
 }
 
+.warning-light-highlighted{
+  color:red;
+  background: RGBA(255,255,255,0.8);
+}
+
 #navbar{
   background:white;
 }
