@@ -41,7 +41,7 @@ async function initMap(main_array) {
    var UserMarker = new google.maps.Marker({
    position: myLatLng,
    map: map,
-   title: "My Location",
+   title: `My Location {${latitude}, ${longitude}}`,
 
 }
 );
@@ -226,17 +226,10 @@ UserMarker;
   var latitude;
   var longitude;
   // 10km
-  // [{long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}, {long: -33.9104, long 151.1136}]
 
-  // Fire modal if geolocation unavailable
-  // if (!latitude || !longitude) {
-  //   geolocMissingModal.show();
-  // } else 
-  
-  
 
-    // If referenceNode is the last child within its parent element, that's fine, because referenceNode.nextSibling will be null and insertBefore handles that case by adding to the end of the list.
-    // https://stackoverflow.com/a/4793630/9095603
+  // If referenceNode is the last child within its parent element, that's fine, because referenceNode.nextSibling will be null and insertBefore handles that case by adding to the end of the list.
+  // https://stackoverflow.com/a/4793630/9095603
   
 
   // RESET form
@@ -610,7 +603,7 @@ async function addEventListenerToEVFuelOption(){
     // be careful to ensure this limit is limiting to the TOP 10 results and not to the BOTTOM 10
     if (main_array.stations.length > 10) {
       countOfReturnedResults = 10;
-      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
+      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
     } else if (
       main_array.stations.length > 0 &&
       main_array.stations.length <= 10
@@ -735,7 +728,7 @@ async function addEventListenerToEVFuelOption(){
     <div class="col-md-6">
       <div class="card-body">
 
-      <span id="favourite-tag">favourite<div><i class="fa-solid fa-heart"></i></div></span>
+
 
         <h5>Rank #${rank} by ${sortByWhat}</h5>
         <h3>${main_array.stations[i].name}</h3>
@@ -754,17 +747,14 @@ async function addEventListenerToEVFuelOption(){
         </table>
 
         </p>
-        <p class="card-text"><small class="text-muted">Last price change at: ${lastUpdated}</small></p>
-        <button id="${main_array.stations[i].code}-save-btn" type="button">&#x2764; Save to favourites</button>
-        <button id="${main_array.stations[i].code}-unsave-btn" type="button">&#x1F494; Remove from favourites</button>
-        <p class="card-text"><small><a href="#">View and manage favourites</a></small></p>
+
       </div>
     </div>
   </div>
 </div>
 `;
 
-  toggleSaveToFav(main_array.stations[i].code);
+  
 
 
     }
@@ -845,8 +835,9 @@ async function addEventListenerToEVFuelOption(){
 
       await displayResult(data);
       // window.initMap = initMap;
-      await initMap(data);
-      await generateSmallMaps(data);
+ 
+      await Promise.all([await initMap(data), await generateSmallMaps(data)]);
+
       loadingOverlayOff();
     } catch (err) {
       console.log(err);
@@ -906,29 +897,90 @@ async function addEventListenerToEVFuelOption(){
    
     
     
-
-    var para2 = document.createElement("p")
-    para2.setAttribute("id","outPutGeoLocErr")
-
     // geoloc Modal Element
-    y = document.querySelector("#geoloc-perms-err .modal-body").appendChild(para2)
-    y.innerHTML = 'Sup man';
-
+    // container for the dynamically-generated error in the modal
+    var para2 = document.createElement("p")
+    para2.setAttribute("id","dynamic-msg")
+    dynamicModalMsg = document.querySelector("#geoloc-perms-err .modal-body").appendChild(para2)
+  
+    // Container for the user's grabbed geolocation
     // Top of page under heading insert
     var para = document.createElement("p")
-    para.setAttribute("id","getLocationOutput")
-
-    
-
+    para.setAttribute("id","dynamic-coordinates-display")
     var h1Ele = document.querySelector("#main-h1")
- 
     h1Ele.parentNode.insertBefore(para, h1Ele.nextSibling);
+    dynamicCoordinatesDisplay = document.getElementById("dynamic-coordinates-display")
 
-    x = document.getElementById("getLocationOutput")
+    // Now the dynamic containers are ready for getLocation() to use
+
+    // await getLocation()
+
+    // getCurrentPosition doesn't return anything, you have to "promisify" it first:
+    // https://stackoverflow.com/a/67246644/9095603
+
+    // MDN: GeolocationPositionError
+    // https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError#instance_properties
+
+    try {
+      console.log('getting location...');
+      let location = await getLocation();
+      console.log('got location');
+      console.log(location)
+      console.log(location.coords.latitude)
+      latitude = location.coords.latitude;
+      latitude = latitude.toString()
+      longitude = location.coords.longitude;
+      longitude = longitude.toString()
+      dynamicCoordinatesDisplay.innerHTML = `<p><em><i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${latitude}, Longitude: ${longitude} }</em></p>`;
+    } catch (e) {
+      console.log(e)
+      console.log('ERROR');
+      // console.log(e.message)
+      if(e.PERMISSION_DENIED){
+        console.log("User denied the request for Geolocation.")
+        dynamicModalMsg.innerHTML = `Geolocation is not enabled.  In order to use this search facility, you will first need to enable geolocation permissions in your browser.<br><br><i class="fa-solid fa-arrow-up-right-from-square"></i> See <a href="https://docs.buddypunch.com/en/articles/919258-how-to-enable-location-services-for-chrome-safari-edge-and-android-ios-devices-gps-setting" target="_blank">instructions</a> on how to enable geolocation in your browser.  Then feel free to reload to try again once you have switched on location services.`
+        geolocMissingModal.show();
+      }
+      else if(e.POSITION_UNAVAILABLE){
+        dynamicModalMsg.innerHTML = "Location information is unavailable."
+        geolocMissingModal.show();
+      }
+      else if(e.TIMEOUT){
+        dynamicModalMsg.innerHTML = "The request to get user location timed out."
+        geolocMissingModal.show();
+      }
+      else if(error.UNKNOWN_ERROR){
+      dynamicModalMsg.innerHTML = "An unknown error occurred."
+      geolocMissingModal.show()
+      }
+
+//     if(error.PERMISSION_DENIED){
+//       console.log("User denied the request for Geolocation.")
+//       dynamicModalMsg.innerHTML = `Geolocation is not enabled. In order to use this search facility, you will first need to enable geolocation permissions in your browser.<br><br>Instructions on how to enable geolocation in your browser are as follows: ...`
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//     } else if(error.POSITION_UNAVAILABLE){
+//       dynamicModalMsg.innerHTML = "Location information is unavailable."
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//       } else if(error.TIMEOUT){
+//       dynamicModalMsg.innerHTML = "The request to get user location timed out."
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//       } else if(error.UNKNOWN_ERROR){
+//       dynamicModalMsg.innerHTML = "An unknown error occurred."
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//       }
 
 
+      return;
+    }
 
-    await getLocation()
 
     credentials = await getCredentials();
     console.log("credentials in runApp(): " + credentials);
@@ -1065,54 +1117,80 @@ var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station 
 
 
 
-// check if location setting has been turned off in users browser
-// https://stackoverflow.com/a/14862073/9095603
 
-async function getLocation() {
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition,showError);
-
-  } else {
-    y.innerHTML = "Geolocation is not supported by this browser.";
-    geolocMissingModal.show()
-  }
-}
-
-function showPosition(position) {
+  // getCurrentPosition doesn't return anything, you have to "promisify" it first:
+    // https://stackoverflow.com/a/67246644/9095603
+let getLocation = () => new Promise((resolve, reject) => 
+  navigator.geolocation.getCurrentPosition(resolve, reject));
+  
 
 
-  latitude = position.coords.latitude;
-  latitude = latitude.toString()
-  console.log({latitude})
-  longitude = position.coords.longitude;
-  longitude = longitude.toString()
-  console.log({longitude})
 
 
-  x.innerHTML = `<p><em><i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude} }</em></p>`;
-}
 
-function showError(error) {
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      y.innerHTML = "User denied the request for Geolocation."
-      geolocMissingModal.show()
-      break;
-    case error.POSITION_UNAVAILABLE:
-      y.innerHTML = "Location information is unavailable."
-      geolocMissingModal.show()
-      break;
-    case error.TIMEOUT:
-      y.innerHTML = "The request to get user location timed out."
-      geolocMissingModal.show()
-      break;
-    case error.UNKNOWN_ERROR:
-      y.innerHTML = "An unknown error occurred."
-      geolocMissingModal.show()
-      break;
-  }
-}
+// // check if location setting has been turned off in users browser
+// // https://stackoverflow.com/a/14862073/9095603
+
+// async function getLocation() {
+
+//   try{
+//   // if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(showPosition,showError);
+//   }
+//   // } 
+//   catch {
+//     if (!navigator.geolocation){
+//     dynamicModalMsg.innerHTML = "Geolocation is not supported by this browser.";
+//     geolocMissingModal.show();
+//     return;
+//     }
+//     else{
+//       showError
+
+//     }
+//   }
+// }
+
+// function showPosition(position) {
+
+
+//   latitude = position.coords.latitude;
+//   latitude = latitude.toString()
+//   console.log({latitude})
+//   longitude = position.coords.longitude;
+//   longitude = longitude.toString()
+//   console.log({longitude})
+
+
+//   dynamicCoordinatesDisplay.innerHTML = `<p><em><i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude} }</em></p>`;
+// }
+
+// function showError(error) {
+  
+//     if(error.PERMISSION_DENIED){
+//       console.log("User denied the request for Geolocation.")
+//       dynamicModalMsg.innerHTML = `Geolocation is not enabled. In order to use this search facility, you will first need to enable geolocation permissions in your browser.<br><br>Instructions on how to enable geolocation in your browser are as follows: ...`
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//     } else if(error.POSITION_UNAVAILABLE){
+//       dynamicModalMsg.innerHTML = "Location information is unavailable."
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//       } else if(error.TIMEOUT){
+//       dynamicModalMsg.innerHTML = "The request to get user location timed out."
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//       } else if(error.UNKNOWN_ERROR){
+//       dynamicModalMsg.innerHTML = "An unknown error occurred."
+//       geolocMissingModal.show()
+//       throw dynamicModalMsg.innerHTML;
+//       // break;
+//       }
+  
+// }
 
 
 // async function geoGrab(){
@@ -1145,23 +1223,6 @@ function showError(error) {
 
 
 
-  function toggleSaveToFav(cardId){
-
-    console.log({cardId})
-
-    var saveToFavBtn = document.getElementById(`${cardId}-save-btn`)
-    console.log({saveToFavBtn})
-    saveToFavBtn.addEventListener("click",function(){
-      saveToFavBtn.style.setProperty("display","none")
-    })
-
-    var unSaveToFavBtn = document.getElementById(`${cardId}-unsave-btn`)
-    console.log({unSaveToFavBtn})
-    unSaveToFavBtn.addEventListener("click",function(){
-      unSaveToFavBtn.style.setProperty("display","none")
-    })
-
-  }
 
 
 
