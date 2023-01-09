@@ -1229,7 +1229,7 @@ var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station 
       );
       markers = markers.join("&");
       map.src =
-        "https://maps.googleapis.com/maps/api/staticmap?center=-33.9106,151.1564&zoom=12&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&maptype=roadmap&path=enc:" +
+        "https://maps.googleapis.com/maps/api/staticmap?center=" + orig.lat + "," + orig.lng + "&zoom=12&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&maptype=roadmap&path=enc:" +
         path +
         "&" +
         markers;
