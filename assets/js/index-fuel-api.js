@@ -1060,7 +1060,7 @@ https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=
 function calcRoute(mapLabel, station_iter) {
   const map = document.getElementById(mapLabel);
 
-  var orig = { lat: -33.9106, lng: 151.1564 };
+  var orig = { lat: latitude, longitude: 151.1564 };
   var dest = {
     lat: fuelRequest.stations[station_iter].location.latitude,
     lng: fuelRequest.stations[station_iter].location.longitude,
