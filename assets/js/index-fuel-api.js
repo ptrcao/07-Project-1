@@ -617,10 +617,10 @@ async function addEventListenerToEVFuelOption(){
       main_array.stations.length <= 10
     ) {
       countOfReturnedResults = main_array.stations.length;
-      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
+      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
     } else if (main_array.stations.length <= 0) {
       countOfReturnedResults = 0;
-      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: No results found. Try broadening your search parameters.`;
+      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: No results found. Try broadening your search parameters.`;
       // unlike the conditions above, the append elements are required here because the program will now exit
       resultsContainer.appendChild(resultsCountEle);
       appendSearchAgainButton();
@@ -743,7 +743,7 @@ async function addEventListenerToEVFuelOption(){
 
         <div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${main_array.stations[i].location.distance} km</div>
 
-        <p class="card-text">
+        
                 
         <table>
         <tbody>
@@ -754,8 +754,7 @@ async function addEventListenerToEVFuelOption(){
         </tbody>
         </table>
 
-        </p>
-
+        <p class="card-text" style="bottom:0;"><small class="text-muted">Last at ${lastUpdated}</small></p>
       </div>
     </div>
   </div>
@@ -1012,6 +1011,7 @@ async function addEventListenerToEVFuelOption(){
 
   runApp();
 });
+// END brackets for DOMContentLoaded event listener
 
 
 
