@@ -189,13 +189,13 @@ UserMarker;
   );
 
   // Using test API
-  var auth =
-    "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==";
-  var apikey = "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT";
+  // var auth =
+  //   "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==";
+  // var apikey = "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT";
 
   // Using free registered API
-  // var auth = "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
-  // var apikey = "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4";
+  var auth = "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
+  var apikey = "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4";
 
   // Artificial selections
   // To test modal, comment out these 3:
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Received as argument: " + credentials);
 
       let response = await fetch(
-        "https://api.onegov.nsw.gov.au/FuelCheckRefData/v2/fuel/lovs?states=NSW",
+        "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelCheckRefData/v2/fuel/lovs?states=NSW",
         {
           headers: {
             accept: "application/json",
@@ -811,7 +811,7 @@ async function addEventListenerToEVFuelOption(){
       let response = await fetch(
         // if needed https://cors-anywhere.herokuapp.com/
         // then, if needed go to https://cors-anywhere.herokuapp.com/corsdemo and click to get server permissions
-        "https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
+        "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
         {
           headers: {
             // apikey: "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4",
@@ -842,8 +842,11 @@ async function addEventListenerToEVFuelOption(){
 
       await displayResult(data);
       // window.initMap = initMap;
- 
-      await Promise.all([await initMap(data), await generateSmallMaps(data)]);
+      
+      //
+      // if(countOfReturnedResults != 0){
+      await Promise.all([initMap(data), generateSmallMaps(data)]);
+      // }
 
       loadingOverlayOff();
     } catch (err) {
