@@ -1,3 +1,10 @@
+var fill;
+var savedFilter;
+
+var fuelOptionIndex
+var radiusOptionIndex
+var SortByIndex
+
 var credentials;
 var fuelName;
 var sortByCode;
@@ -17,6 +24,32 @@ var x;
 var y;
 
 var map;
+
+
+function saveHistory() {
+  var savedFilter = {
+      savedlat: Number(latitude),
+      savedlng: Number(longitude),
+      savedfuelType: fuelOptionEle.value,
+      savedradius: radiusOptionEle.value,
+      savedsortByWhat: rankingOptionEle.value,
+    };
+    localStorage.setItem("AutoFill", JSON.stringify(savedFilter));
+  }
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
 
 // initiates Map and stores the user geolocation
 
@@ -802,6 +835,9 @@ function appendSearchAgainButton() {
 
 
 async function runSearch() {
+
+  saveHistory()
+
   var searchPanel = document.getElementById("search-parent-container");
   searchPanel.style.setProperty("display", "none");
 
@@ -875,6 +911,18 @@ async function runSearch() {
 async function runApp() {
   loadingOverlayOn();
 
+
+
+
+
+
+
+
+
+
+
+
+
   // Output current year to copyright stamp
   // Get the current year in JavaScript
   // https://stackoverflow.com/a/6002276/9095603
@@ -900,6 +948,10 @@ async function runApp() {
   );
 
   // Now the dynamic containers are ready for getLocation() to use
+
+
+
+
 
   // await getLocation()
 
@@ -943,6 +995,8 @@ async function runApp() {
     return;
   }
 
+
+
   credentials = await getCredentials();
   console.log("credentials in runApp(): " + credentials);
 
@@ -952,6 +1006,96 @@ async function runApp() {
     addEventListenerToEVFuelOption(),
   ]);
   // https://stackoverflow.com/a/35612484/9095603
+
+
+
+
+
+
+
+
+
+  if (localStorage.getItem("AutoFill") === null) {
+    console.log("autofill is null")}
+    else{console.log('localStorage has something')
+    console.log(localStorage.getItem("AutoFill"))
+    console.log(JSON.parse(localStorage.getItem("AutoFill")))
+  }
+
+
+
+  
+
+
+  fill = localStorage.getItem("AutoFill");
+  console.log(fill);
+  // var fill = JSON.parse(localStorage.getItem("AutoFill"));
+  // document.querySelector("#autofill-btn").style.display = "inline-block";
+
+if (fill !== null) {
+
+
+  
+  savedFilter = JSON.parse(fill);
+  console.log('savedFilter: ' + savedFilter)
+//   latitude = `${savedFilter.savedlat}`;
+//   longitude = `${savedFilter.savedlng}`;
+
+ 
+
+  // GET THE INDICES OF SAVED CHOICES
+  fuelOptionIndex = document.querySelector(`#fuel-select option[value=${savedFilter.savedfuelType}]`).index
+
+  radiusOptionIndex = document.querySelector(`#radius-select option[value="${savedFilter.savedradius}"]`).index
+  
+  SortByIndex = document.querySelector(`#ranking-select option[value=${savedFilter.savedsortByWhat}]`).index
+
+}
+
+
+
+
+
+
+  // ADD LISTENER TO THE AUTOFILL BUTTON
+
+  document.getElementById("autofill-btn").addEventListener("click", function (e) {
+    // e.preventDefault();
+  
+    // GET SAVED CHOICES
+
+    if (fill !== null) {
+  
+    // SET THE SELECTS TO THE INDICES ABOVE
+    document.querySelector("#fuel-select").options[fuelOptionIndex].selected = true;
+
+
+    document.querySelector("#radius-select").options[radiusOptionIndex].selected = true;
+
+    document.querySelector("#ranking-select").options[SortByIndex].selected = true;
+
+    if (fill !== null) {
+    document.querySelector("#autofill-btn").disabled = false;
+    // to use disabled in the first place, you need to have the btn Bootsrap class
+    }
+    // MOVED ELSEWHERE TO MAKE IT WORK
+  }
+  // runSearch();
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   loadingOverlayOff();
 }
@@ -977,8 +1121,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // load versus DOMContentLoaded:
   // The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
   // https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+
+  
+  
   runApp();
+  
 });
+
 
 
 
