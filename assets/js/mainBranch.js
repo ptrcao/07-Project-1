@@ -675,6 +675,7 @@ async function runSearch() {
     // END HERE )
     let data = await response.json();
 
+    runSearch();
     await displayResult(data);
     await generateSmallMaps(data);
     loadingOverlayOff();
@@ -932,15 +933,19 @@ if (fill !== null) {
 
   var savedFilter = JSON.parse(fill);
 
-
   latitude = `${savedFilter.savedlat}`;
   longitude = `${savedFilter.savedlng}`;
   fuelType= `${savedFilter.savedfuelType}`
+  fuelOptionEle.innerHTML = fuelType
   radius = `${savedFilter.savedradius}`
+  radiusOptionEle.innerHTML = radius
   sortByWhat = `${savedFilter.savedsortByWhat}`
+  rankingOptionEle.innerHTML = sortByWhat
+
+}
 
 runSearch();
-}
+
 });
 
 
