@@ -2,6 +2,9 @@
 
 ## Description
 
+Fuel Seeker is an application that allows users to search for Fuel Nearby to their location. Users can search by Fuel Type, Price and Distance.
+
+
 Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
 
 - What was your motivation?
@@ -26,10 +29,10 @@ To add a screenshot, create an `assets/images` folder in your repository and upl
 
 ## Credits
 
-Peter Cao
-Joana Villajuan
-Dylan Stroud
-Sarah Mullock
+- Peter Cao - https://github.com/ptrcao, 
+- Joana Villajuan - https://github.com/joanavillajuan
+- Dylan Stroud - https://github.com/Dylan-Stroud
+- Sarah Mullock - https://github.com/smullock
 
 
 
