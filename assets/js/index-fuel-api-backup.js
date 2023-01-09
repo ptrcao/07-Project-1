@@ -546,6 +546,8 @@ function displayResult(main_array){
 </tbody>
 </table>
 
+<p class="card-text"><small class="text-muted"></small></p>
+
 </div>
 
 </div>
