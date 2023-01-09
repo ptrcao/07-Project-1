@@ -169,3 +169,15 @@ body {
   width: 75%;
   
 }
+
+#autoFill-btn {
+  padding: 10px;
+  margin: 10px 10px 30px 10px;
+  border-radius: 15px;
+  border: 2px solid #f3882b;
+  background-color: #f3882b;
+  color: #f8f8f8;
+  font-weight: bold;
+  font-size: 1em;
+  top: 30px;
+}

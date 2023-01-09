@@ -132,432 +132,431 @@ var sortByWhat;
 
 /* Sarah's code */
 
-document.addEventListener("DOMContentLoaded", () => {
-  // https://flaviocopes.com/dom-ready/
+// document.addEventListener("DOMContentLoaded", () => {
+// https://flaviocopes.com/dom-ready/
 
-  // load versus DOMContentLoaded:
-  // The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
-  // https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+// load versus DOMContentLoaded:
+// The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
 
-  // FUNCTIONS
+// FUNCTIONS
 
-  // An on and off switch for the loading overlay which prevents user interaction while the page is being loaded or searches are executing
+// An on and off switch for the loading overlay which prevents user interaction while the page is being loaded or searches are executing
 
-  function loadingOverlayOn() {
-    document
-      .getElementsByClassName("overlay")[0]
-      .style.setProperty("display", "block");
+function loadingOverlayOn() {
+  document
+    .getElementsByClassName("overlay")[0]
+    .style.setProperty("display", "block");
+}
+function loadingOverlayOff() {
+  document
+    .getElementsByClassName("overlay")[0]
+    .style.setProperty("display", "none", "important");
+}
+
+// You want to run the fetch to get the brands (full range is assumed for search) and fuelType (options) from the get go
+async function getCredentials() {
+  try {
+    let response = await fetch(
+      "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
+      {
+        headers: {
+          accept: "application/json",
+          "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+          authorization: auth,
+        },
+        method: "GET",
+      }
+    );
+    let data = await response.json();
+    globalAccessToken = data.access_token;
+    console.log("here:" + data.access_token);
+    console.log("here globalAccessToken:" + globalAccessToken);
+    return globalAccessToken;
+  } catch (error) {
+    console.log(error);
   }
-  function loadingOverlayOff() {
-    document
-      .getElementsByClassName("overlay")[0]
-      .style.setProperty("display", "none", "important");
-  }
+}
 
-  // You want to run the fetch to get the brands (full range is assumed for search) and fuelType (options) from the get go
-  async function getCredentials() {
-    try {
-      let response = await fetch(
-        "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
-        {
-          headers: {
-            accept: "application/json",
-            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-            authorization: auth,
-          },
-          method: "GET",
-        }
-      );
-      let data = await response.json();
-      globalAccessToken = data.access_token;
-      console.log("here:" + data.access_token);
-      console.log("here globalAccessToken:" + globalAccessToken);
-      return globalAccessToken;
-    } catch (error) {
-      console.log(error);
+async function populateForm(credentials) {
+  try {
+    console.log("Check globalAccessToken: " + globalAccessToken);
+    console.log("Received as argument: " + credentials);
+
+    let response = await fetch(
+      "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelCheckRefData/v2/fuel/lovs?states=NSW",
+      {
+        headers: {
+          accept: "application/json",
+          apikey: apikey,
+          authorization: `Bearer ${credentials}`,
+          // "cache-control": "max-age=0",
+          "content-type": "application/json; charset=utf-8",
+          "if-modified-since": "25/12/2022 05:00:00 AM",
+          requesttimestamp: "25/12/2022 05:00:00 AM",
+          transactionid: "5",
+        },
+        method: "GET",
+      }
+    );
+
+    // console.log({response});
+    let data = await response.json();
+
+    // Add fuel types for form
+    var fuelTypes = data.fueltypes;
+
+    // console.log({ fuelTypes });
+
+    for (let i = 0; i < fuelTypes.items.length; ++i) {
+      fuelName = fuelTypes.items[i].name;
+      fuelCode = fuelTypes.items[i].code;
+      // console.log({ fuelName });
+      // console.log({ fuelCode });
+      if (
+        fuelName != "Ethanol 94 / Unleaded 91" &&
+        fuelName != "Premium 95 / Premium 98" &&
+        fuelName != "Diesel / Premium Diesel" &&
+        fuelName != "CNG/NGV" &&
+        fuelName != "Hydrogen" &&
+        fuelName != "LNG"
+      ) {
+        fuelSelect.add(new Option(fuelName, fuelCode));
+        // https://www.javascripttutorial.net/javascript-dom/javascript-add-remove-options/
+        // https://stackoverflow.com/a/73725875/9095603
+      }
     }
-  }
 
-  async function populateForm(credentials) {
-    try {
-      console.log("Check globalAccessToken: " + globalAccessToken);
-      console.log("Received as argument: " + credentials);
+    // Add fuel brands - you will use all of them automatically in the search
+    // Brands should be dynamic, as in theory new brands could be added and old ones phased out
+    var fuelBrands = data.brands.items;
+    // console.table(fuelBrands);
 
-      let response = await fetch(
-        "https://api.onegov.nsw.gov.au/FuelCheckRefData/v2/fuel/lovs?states=NSW",
-        {
-          headers: {
-            accept: "application/json",
-            apikey: apikey,
-            authorization: `Bearer ${credentials}`,
-            // "cache-control": "max-age=0",
-            "content-type": "application/json; charset=utf-8",
-            "if-modified-since": "25/12/2022 05:00:00 AM",
-            requesttimestamp: "25/12/2022 05:00:00 AM",
-            transactionid: "5",
-          },
-          method: "GET",
-        }
-      );
-
-      // console.log({response});
-      let data = await response.json();
-
-      // Add fuel types for form
-      var fuelTypes = data.fueltypes;
-
-      // console.log({ fuelTypes });
-
-      for (let i = 0; i < fuelTypes.items.length; ++i) {
-        fuelName = fuelTypes.items[i].name;
-        fuelCode = fuelTypes.items[i].code;
-        // console.log({ fuelName });
-        // console.log({ fuelCode });
-        if (
-          fuelName != "Ethanol 94 / Unleaded 91" &&
-          fuelName != "Premium 95 / Premium 98" &&
-          fuelName != "Diesel / Premium Diesel" &&
-          fuelName != "CNG/NGV" &&
-          fuelName != "Hydrogen" &&
-          fuelName != "LNG"
-        ) {
-          fuelSelect.add(new Option(fuelName, fuelCode));
-          // https://www.javascripttutorial.net/javascript-dom/javascript-add-remove-options/
-          // https://stackoverflow.com/a/73725875/9095603
-        }
-      }
-
-      // Add fuel brands - you will use all of them automatically in the search
-      // Brands should be dynamic, as in theory new brands could be added and old ones phased out
-      var fuelBrands = data.brands.items;
-      // console.table(fuelBrands);
-
-      brandsArray = [];
-      for (let i = 0; i < fuelBrands.length; ++i) {
-        brandsArray.push(fuelBrands[i].name);
-      }
-
-      // console.log({ brandsArray });
-
-      // Dynamically get sort-by fields
-
-      for (let i = 0; i < data.sortfields.items.length; ++i) {
-        sortByCode = data.sortfields.items[i].code;
-        sortByName = data.sortfields.items[i].name;
-        // console.log({ sortByCode });
-        // console.log({ sortByName });
-
-        document
-          .getElementById("ranking-select")
-          .add(new Option(sortByName, sortByCode));
-      }
-
-      // Dynamically display number of stations
-      document.getElementById("station-count").innerText =
-        data.stations.items.length;
-    } catch (error) {
-      console.log(error);
+    brandsArray = [];
+    for (let i = 0; i < fuelBrands.length; ++i) {
+      brandsArray.push(fuelBrands[i].name);
     }
-  }
 
-  async function attachListenerToButton() {
-    document.getElementById("fetch").addEventListener("click", function (e) {
-      e.preventDefault();
+    // console.log({ brandsArray });
+
+    // Dynamically get sort-by fields
+
+    for (let i = 0; i < data.sortfields.items.length; ++i) {
+      sortByCode = data.sortfields.items[i].code;
+      sortByName = data.sortfields.items[i].name;
+      // console.log({ sortByCode });
+      // console.log({ sortByName });
+
+      document
+        .getElementById("ranking-select")
+        .add(new Option(sortByName, sortByCode));
+    }
+
+    // Dynamically display number of stations
+    document.getElementById("station-count").innerText =
+      data.stations.items.length;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function attachListenerToButton() {
+  document.getElementById("fetch").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    saveHistory();
+    // Fire modal if geolocation unavailable
+    if (!latitude || !longitude) {
+      geolocMissingModal.show();
+    } else {
+      fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
+      // console.log(fuelType);
+      fuelTypeInnerText =
+        fuelOptionEle.options[fuelOptionEle.selectedIndex].innerText;
+      console.log(fuelTypeInnerText);
+      radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
+      // console.log(radius);
+
+      if (radius) {
+        radiusM = radius * 1000;
+      }
+
+      sortByWhat =
+        rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
+      // console.log(sortByWhat);
 
       // saveHistory();
-      // Fire modal if geolocation unavailable
-      if (!latitude || !longitude) {
-        geolocMissingModal.show();
-      } else {
-        fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
-        // console.log(fuelType);
-        fuelTypeInnerText =
-          fuelOptionEle.options[fuelOptionEle.selectedIndex].innerText;
-        console.log(fuelTypeInnerText);
-        radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
-        // console.log(radius);
+      // Add missing inputs modal
+      // if (!fuelType || !radius || !sortByWhat) {
+      if (!fuelType || !radius || !sortByWhat) {
+        // Clear out any previous error messages
+        document.getElementById("missing-text-before").innerHTML = "";
+        document.getElementById("missing-inputs").innerHTML = "";
+        document.getElementById("missing-text-after").innerHTML = "";
+        var plural;
 
-        if (radius) {
-          radiusM = radius * 1000;
+        // Reset array
+        var missingArray = [];
+
+        if (!fuelType) {
+          missingArray.push("Fuel type");
+        }
+        if (!radius) {
+          missingArray.push("Radius");
+        }
+        if (!sortByWhat) {
+          missingArray.push("Rank by");
         }
 
-        sortByWhat =
-          rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
-        // console.log(sortByWhat);
+        for (var i = 0; i < missingArray.length; i++) {
+          var liNode = document.createElement("li");
+          var txtNode = document.createTextNode(`${missingArray[i]}`);
+          liNode.appendChild(txtNode);
+          document.getElementById("missing-inputs").appendChild(liNode);
+        }
 
-        saveHistory();
-        // Add missing inputs modal
-        // if (!fuelType || !radius || !sortByWhat) {
-        if (!fuelType || !radius || !sortByWhat) {
-          // Clear out any previous error messages
-          document.getElementById("missing-text-before").innerHTML = "";
-          document.getElementById("missing-inputs").innerHTML = "";
-          document.getElementById("missing-text-after").innerHTML = "";
-          var plural;
+        // Plural
 
-          // Reset array
-          var missingArray = [];
-
-          if (!fuelType) {
-            missingArray.push("Fuel type");
-          }
-          if (!radius) {
-            missingArray.push("Radius");
-          }
-          if (!sortByWhat) {
-            missingArray.push("Rank by");
-          }
-
-          for (var i = 0; i < missingArray.length; i++) {
-            var liNode = document.createElement("li");
-            var txtNode = document.createTextNode(`${missingArray[i]}`);
-            liNode.appendChild(txtNode);
-            document.getElementById("missing-inputs").appendChild(liNode);
-          }
-
-          // Plural
-
-          if (missingArray.length > 1) {
-            plural = "s";
-          } else {
-            plural = "";
-          }
-
-          document.getElementById(
-            "missing-text-before"
-          ).innerHTML = `Error: you are missing the following selection${plural}:`;
-          document.getElementById(
-            "missing-text-after"
-          ).innerHTML = `Please try again after you have made your selection${plural}.`;
-          document.getElementById(
-            "exampleModalLongTitle"
-          ).innerHTML = `Missing selection${plural}!`;
-
-          // Fire the modal
-          inputMissingModal.show();
+        if (missingArray.length > 1) {
+          plural = "s";
         } else {
-          runSearch();
+          plural = "";
         }
 
-        // end braces for if(!latitude || !longitude){
+        document.getElementById(
+          "missing-text-before"
+        ).innerHTML = `Error: you are missing the following selection${plural}:`;
+        document.getElementById(
+          "missing-text-after"
+        ).innerHTML = `Please try again after you have made your selection${plural}.`;
+        document.getElementById(
+          "exampleModalLongTitle"
+        ).innerHTML = `Missing selection${plural}!`;
+
+        // Fire the modal
+        inputMissingModal.show();
+      } else {
+        runSearch();
+      }
+
+      // end braces for if(!latitude || !longitude){
+    }
+  });
+}
+
+async function addEventListenerToEVFuelOption() {
+  document
+    .querySelector("#fuel-select")
+    .addEventListener("change", function () {
+      if (this.value == "EV") {
+        console.log("EV selected");
+        document
+          .querySelector("#ranking-select option[value='Price']")
+          .setAttribute("disabled", "");
+        document.querySelector("#price-disable-EV").style.display = "inline";
+        document.querySelector("#no-price-warning-EV").style.display = "inline";
+      } else if (this.value != "EV") {
+        console.log("NOT EV selected");
+        document
+          .querySelector("#ranking-select option[value='Price']")
+          .removeAttribute("disabled", "");
+        // If the attribute is present at all, regardless of the value, its value is considered to be true.
+        // If a boolean attribute is not present, the value of the attribute is considered to be false.
+        // If you need to remove an attribute, use the removeAttribute method.
+        // https://bobbyhadz.com/blog/javascript-set-attribute-disabled#:~:text=Set%20the%20disabled%20Attribute%20using%20JavaScript%20%23%20To,will%20add%20the%20disabled%20attribute%20to%20the%20element.
+        document.querySelector("#price-disable-EV").style.display = "none";
+        document.querySelector("#no-price-warning-EV").style.display = "none";
       }
     });
-  }
+}
 
-  async function addEventListenerToEVFuelOption() {
-    document
-      .querySelector("#fuel-select")
-      .addEventListener("change", function () {
-        if (this.value == "EV") {
-          console.log("EV selected");
-          document
-            .querySelector("#ranking-select option[value='Price']")
-            .setAttribute("disabled", "");
-          document.querySelector("#price-disable-EV").style.display = "inline";
-          document.querySelector("#no-price-warning-EV").style.display =
-            "inline";
-        } else if (this.value != "EV") {
-          console.log("NOT EV selected");
-          document
-            .querySelector("#ranking-select option[value='Price']")
-            .removeAttribute("disabled", "");
-          // If the attribute is present at all, regardless of the value, its value is considered to be true.
-          // If a boolean attribute is not present, the value of the attribute is considered to be false.
-          // If you need to remove an attribute, use the removeAttribute method.
-          // https://bobbyhadz.com/blog/javascript-set-attribute-disabled#:~:text=Set%20the%20disabled%20Attribute%20using%20JavaScript%20%23%20To,will%20add%20the%20disabled%20attribute%20to%20the%20element.
-          document.querySelector("#price-disable-EV").style.display = "none";
-          document.querySelector("#no-price-warning-EV").style.display = "none";
-        }
-      });
-  }
+async function displayResult(main_array) {
+  // console.log({ main_array });
+  // console.log({ resultsContainer });
 
-  async function displayResult(main_array) {
-    // console.log({ main_array });
-    // console.log({ resultsContainer });
-
-    // Check if at least some stations fall inside radius
-    var arrayDltR = [];
-    for (var i = 0; i < main_array.stations.length; i++) {
-      console.log("distance: " + main_array.stations[i].location.distance);
-      console.log({ radius });
-      if (main_array.stations[i].location.distance <= radius) {
-        // array Distance less than Radius
-        arrayDltR.push(true);
-      } else {
-        arrayDltR.push(false);
-      }
-    }
-
-    // If there are not at least some stations inside radius, then report as such to user, advise to broaden radius and end program - the Search Again button will become available
-    console.log({ arrayDltR });
-    if (arrayDltR.some((value) => value === true)) {
-      console.log("At least some service stations found inside of radius.");
+  // Check if at least some stations fall inside radius
+  var arrayDltR = [];
+  for (var i = 0; i < main_array.stations.length; i++) {
+    console.log("distance: " + main_array.stations[i].location.distance);
+    console.log({ radius });
+    if (main_array.stations[i].location.distance <= radius) {
+      // array Distance less than Radius
+      arrayDltR.push(true);
     } else {
-      console.log(
-        "No service stations were found inside your specified radius.  Please broaden your radius and try again."
-      );
-      var resultsCountEle = document.createElement("div");
-      resultsCountEle.innerText =
-        "No service stations were found inside your specified radius.  Please broaden your radius and try again.";
-      resultsContainer.appendChild(resultsCountEle);
-
-      appendSearchAgainButton();
-
-      // then exit the function
-      return;
+      arrayDltR.push(false);
     }
+  }
 
-    /* work in progress on sticky bar */
-    var topStickyBar = document.createElement("div");
-    var resultsCountEle = document.createElement("h2");
-
-    topStickyBar.setAttribute("id", "navbar");
-    // topStickyBar.innerHTML = 'this is sticky bar';
-    topStickyBar.classList.add("fixed-bottom", "text-center");
-
-    var body = document.getElementsByTagName("body")[0];
-
-    // existingNode.parentNode.insertBefore(newNode, existingNode);
-    // resultsContainer.parentNode.insertBefore(topStickyBar, resultsContainer);
-
-    // body.prepend(topStickyBar);
-    // body.append(topStickyBar);
-    var footer = document.getElementsByTagName("footer")[0];
-
-    footer.parentNode.insertBefore(topStickyBar, footer.nextSibling);
-
-    var topStickyBarCreated = document.getElementById("navbar");
-
-    const searchAgainBtn = document.createElement("button");
-    searchAgainBtn.innerHTML = "Search again";
-    searchAgainBtn.setAttribute("type", "submit");
-    searchAgainBtn.setAttribute("id", "search-again-btn");
-    searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg", "m-2");
-
-    searchAgainBtn.setAttribute("onClick", "window.location.reload();");
-
-    topStickyBarCreated.appendChild(searchAgainBtn);
-
-    var searchAgainMsg = document.createElement("span");
-    searchAgainMsg.setAttribute("id", "search-again-msg");
-    searchAgainMsg.innerHTML =
-      "Don't like your results? Try again with different search parameters:";
-
-    topStickyBarCreated.insertBefore(searchAgainMsg, searchAgainBtn);
-
-    // FIX STICKY OVERLAP, otherwise footer will be covered
-    // For full responsive solution you would need either javascript, or flex, but 100px works for the worst case scenario, so it works
-
-    footer.classList.remove("pb-3");
-    footer.style.paddingBottom = "100px";
-
-    // be careful to ensure this limit is limiting to the TOP 10 results and not to the BOTTOM 10
-    if (main_array.stations.length > 10) {
-      countOfReturnedResults = 10;
-      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
-    } else if (
-      main_array.stations.length > 0 &&
-      main_array.stations.length <= 10
-    ) {
-      countOfReturnedResults = main_array.stations.length;
-      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
-    } else if (main_array.stations.length <= 0) {
-      countOfReturnedResults = 0;
-      resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: No results found. Try broadening your search parameters.`;
-      // unlike the conditions above, the append elements are required here because the program will now exit
-      resultsContainer.appendChild(resultsCountEle);
-      appendSearchAgainButton();
-      return;
-    }
-
+  // If there are not at least some stations inside radius, then report as such to user, advise to broaden radius and end program - the Search Again button will become available
+  console.log({ arrayDltR });
+  if (arrayDltR.some((value) => value === true)) {
+    console.log("At least some service stations found inside of radius.");
+  } else {
+    console.log(
+      "No service stations were found inside your specified radius.  Please broaden your radius and try again."
+    );
+    var resultsCountEle = document.createElement("div");
+    resultsCountEle.innerText =
+      "No service stations were found inside your specified radius.  Please broaden your radius and try again.";
     resultsContainer.appendChild(resultsCountEle);
 
-    // var bigMapContainer = document.createElement("div");
-    // bigMapContainer.setAttribute("class","row")
+    appendSearchAgainButton();
 
-    var bigMap = document.createElement("div");
-    // bigMap.setAttribute("src", "assets/images/example-big-map.png");
-    // bigMap.setAttribute("alt", "Summary map");
-    bigMap.setAttribute("id", "map");
-    bigMap.classList.add("img-fluid", "card", "mb-3");
-    // resultsContainer.appendChild(bigMapContainer);
-    // bigMapContainer.appendChild(bigMap)
+    // then exit the function
+    return;
+  }
 
-    resultsContainer.appendChild(bigMap);
+  /* work in progress on sticky bar */
+  var topStickyBar = document.createElement("div");
+  var resultsCountEle = document.createElement("h2");
 
-    /* BIG MAP GOES HERE */
+  topStickyBar.setAttribute("id", "navbar");
+  // topStickyBar.innerHTML = 'this is sticky bar';
+  topStickyBar.classList.add("fixed-bottom", "text-center");
 
-    for (var i = 0; i < main_array.stations.length; i++) {
-      // you can't limit by using a fixed/static number because there will be cases where i does not even reach 20, for example, so use an if breakout condition:
-      if (i === 10) {
-        // countOfReturnedResults = 10;
-        // i = 19 was the 20th, so we do nothing from i = 20
-        break;
-      }
+  var body = document.getElementsByTagName("body")[0];
 
-      // If none of the returned stations are within the radius then return: "there are no stations inside your radius.  Please try again and broaden the radius."
+  // existingNode.parentNode.insertBefore(newNode, existingNode);
+  // resultsContainer.parentNode.insertBefore(topStickyBar, resultsContainer);
 
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
-      // for stricter condition, you can use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+  // body.prepend(topStickyBar);
+  // body.append(topStickyBar);
+  var footer = document.getElementsByTagName("footer")[0];
 
-      console.log(main_array.stations[i].location.distance);
+  footer.parentNode.insertBefore(topStickyBar, footer.nextSibling);
 
-      current_code = main_array.stations[i].code;
-      console.log({ current_code });
+  var topStickyBarCreated = document.getElementById("navbar");
 
-      console.log(main_array.stations[i].code);
-      console.log(main_array.stations[i].name);
-      console.log(main_array.stations[i].address);
-      console.log(main_array.stations[i].location.latitude);
-      console.log(main_array.stations[i].location.longitude);
+  const searchAgainBtn = document.createElement("button");
+  searchAgainBtn.innerHTML = "Search again";
+  searchAgainBtn.setAttribute("type", "submit");
+  searchAgainBtn.setAttribute("id", "search-again-btn");
+  searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg", "m-2");
 
-      // var indexOfInterest = main_array.prices.findIndex(
-      //   function(sub) {
+  searchAgainBtn.setAttribute("onClick", "window.location.reload();");
 
-      //     return sub.indexOf(
-      //       function(blah){
-      //         return blah.stationcode = current_stationid
-      //         // https://stackoverflow.com/a/39810268/9095603
-      //       }) !== -1;
-      //     // The indexOf() method returns -1 if the value is not found.
-      //     // https://www.w3schools.com/jsref/jsref_indexof_array.asp
+  topStickyBarCreated.appendChild(searchAgainBtn);
 
-      // });
+  var searchAgainMsg = document.createElement("span");
+  searchAgainMsg.setAttribute("id", "search-again-msg");
+  searchAgainMsg.innerHTML =
+    "Don't like your results? Try again with different search parameters:";
 
-      // main_array.prices.forEach(element => {console.log(typeof element )});
+  topStickyBarCreated.insertBefore(searchAgainMsg, searchAgainBtn);
 
-      // console.table(main_array.prices);
+  // FIX STICKY OVERLAP, otherwise footer will be covered
+  // For full responsive solution you would need either javascript, or flex, but 100px works for the worst case scenario, so it works
 
-      var indexOfInterest = main_array.prices.findIndex((sub) => {
-        // console.log({current_code})
-        // console.log({sub})
-        // console.log(sub['stationcode'])
+  footer.classList.remove("pb-3");
+  footer.style.paddingBottom = "100px";
 
-        // return sub.indexOf(number) !== -1;
-        return sub["stationcode"] == current_code;
+  // be careful to ensure this limit is limiting to the TOP 10 results and not to the BOTTOM 10
+  if (main_array.stations.length > 10) {
+    countOfReturnedResults = 10;
+    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
+  } else if (
+    main_array.stations.length > 0 &&
+    main_array.stations.length <= 10
+  ) {
+    countOfReturnedResults = main_array.stations.length;
+    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
+  } else if (main_array.stations.length <= 0) {
+    countOfReturnedResults = 0;
+    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: No results found. Try broadening your search parameters.`;
+    // unlike the conditions above, the append elements are required here because the program will now exit
+    resultsContainer.appendChild(resultsCountEle);
+    appendSearchAgainButton();
+    return;
+  }
 
-        // return sub.indexOf(
-        //   sub.stationcode == current_code
-        //   ) !== -1;
-        // The indexOf() method returns -1 if the value is not found.
-        // https://www.w3schools.com/jsref/jsref_indexof_array.asp
-      });
+  resultsContainer.appendChild(resultsCountEle);
 
-      // console.log(indexOfInterest);
+  // var bigMapContainer = document.createElement("div");
+  // bigMapContainer.setAttribute("class","row")
 
-      // Get price for corresponding
-      var the_price = main_array.prices[indexOfInterest].price;
-      var lastUpdated = main_array.prices[indexOfInterest].lastupdated;
-      // console.log({ the_price });
-      // console.log({ lastUpdated });
+  var bigMap = document.createElement("div");
+  // bigMap.setAttribute("src", "assets/images/example-big-map.png");
+  // bigMap.setAttribute("alt", "Summary map");
+  bigMap.setAttribute("id", "map");
+  bigMap.classList.add("img-fluid", "card", "mb-3");
+  // resultsContainer.appendChild(bigMapContainer);
+  // bigMapContainer.appendChild(bigMap)
 
-      let resultsSlot = document.createElement("div");
-      resultsSlot.setAttribute("class", `station-index-${indexOfInterest}`);
-      resultsContainer.appendChild(resultsSlot);
+  resultsContainer.appendChild(bigMap);
 
-      rank = i + 1;
+  /* BIG MAP GOES HERE */
 
-      resultsSlot.innerHTML = `
+  for (var i = 0; i < main_array.stations.length; i++) {
+    // you can't limit by using a fixed/static number because there will be cases where i does not even reach 20, for example, so use an if breakout condition:
+    if (i === 10) {
+      // countOfReturnedResults = 10;
+      // i = 19 was the 20th, so we do nothing from i = 20
+      break;
+    }
+
+    // If none of the returned stations are within the radius then return: "there are no stations inside your radius.  Please try again and broaden the radius."
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+    // for stricter condition, you can use https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+
+    console.log(main_array.stations[i].location.distance);
+
+    current_code = main_array.stations[i].code;
+    console.log({ current_code });
+
+    console.log(main_array.stations[i].code);
+    console.log(main_array.stations[i].name);
+    console.log(main_array.stations[i].address);
+    console.log(main_array.stations[i].location.latitude);
+    console.log(main_array.stations[i].location.longitude);
+
+    // var indexOfInterest = main_array.prices.findIndex(
+    //   function(sub) {
+
+    //     return sub.indexOf(
+    //       function(blah){
+    //         return blah.stationcode = current_stationid
+    //         // https://stackoverflow.com/a/39810268/9095603
+    //       }) !== -1;
+    //     // The indexOf() method returns -1 if the value is not found.
+    //     // https://www.w3schools.com/jsref/jsref_indexof_array.asp
+
+    // });
+
+    // main_array.prices.forEach(element => {console.log(typeof element )});
+
+    // console.table(main_array.prices);
+
+    var indexOfInterest = main_array.prices.findIndex((sub) => {
+      // console.log({current_code})
+      // console.log({sub})
+      // console.log(sub['stationcode'])
+
+      // return sub.indexOf(number) !== -1;
+      return sub["stationcode"] == current_code;
+
+      // return sub.indexOf(
+      //   sub.stationcode == current_code
+      //   ) !== -1;
+      // The indexOf() method returns -1 if the value is not found.
+      // https://www.w3schools.com/jsref/jsref_indexof_array.asp
+    });
+
+    // console.log(indexOfInterest);
+
+    // Get price for corresponding
+    var the_price = main_array.prices[indexOfInterest].price;
+    var lastUpdated = main_array.prices[indexOfInterest].lastupdated;
+    // console.log({ the_price });
+    // console.log({ lastUpdated });
+
+    let resultsSlot = document.createElement("div");
+    resultsSlot.setAttribute("class", `station-index-${indexOfInterest}`);
+    resultsContainer.appendChild(resultsSlot);
+
+    rank = i + 1;
+
+    resultsSlot.innerHTML = `
 
 
       <style>
@@ -566,8 +565,8 @@ document.addEventListener("DOMContentLoaded", () => {
       </style>
 
 <div id="${
-        main_array.stations[i].code
-      }" class="card mb-3" style="max-width: 768px;">
+      main_array.stations[i].code
+    }" class="card mb-3" style="max-width: 768px;">
 
   <div class="row g-0">
     <div class="col-md-6">
@@ -583,8 +582,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <h3>${main_array.stations[i].name}</h3>
 
         <div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${
-        main_array.stations[i].location.distance
-      } km</div>
+      main_array.stations[i].location.distance
+    } km</div>
 
         <p class="card-text">
                 
@@ -618,110 +617,111 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 `;
 
-      toggleSaveToFav(main_array.stations[i].code);
-    }
-
-    appendSearchAgainButton();
+    toggleSaveToFav(main_array.stations[i].code);
   }
 
-  function appendSearchAgainButton() {
-    // Append search again button at end
-    const stickPanelBottom = document.createElement("div");
-    // stickPanelBottom.classList.add("text-center", "btn-dark", "btn-lg");
-    document.body.appendChild(stickPanelBottom);
+  appendSearchAgainButton();
+}
 
-    const searchAgainBtn = document.createElement("button");
-    searchAgainBtn.innerHTML = "Search again";
-    searchAgainBtn.setAttribute("type", "submit");
-    searchAgainBtn.setAttribute("id", "search-again-btn");
-    searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg");
+function appendSearchAgainButton() {
+  // Append search again button at end
+  const stickPanelBottom = document.createElement("div");
+  // stickPanelBottom.classList.add("text-center", "btn-dark", "btn-lg");
+  document.body.appendChild(stickPanelBottom);
 
-    searchAgainBtn.setAttribute("onClick", "window.location.reload();");
+  const searchAgainBtn = document.createElement("button");
+  searchAgainBtn.innerHTML = "Search again";
+  searchAgainBtn.setAttribute("type", "submit");
+  searchAgainBtn.setAttribute("id", "search-again-btn");
+  searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg");
 
-    // topStickyBar.appendChild(searchAgainBtn);
-  }
+  searchAgainBtn.setAttribute("onClick", "window.location.reload();");
 
-  async function runSearch() {
-    var searchPanel = document.getElementById("search-parent-container");
-    searchPanel.style.setProperty("display", "none");
+  // topStickyBar.appendChild(searchAgainBtn);
+}
 
-    loadingOverlayOn();
-    try {
-      let response = await fetch(
-        // if needed https://cors-anywhere.herokuapp.com/
-        // then, if needed go to https://cors-anywhere.herokuapp.com/corsdemo and click to get server permissions
-        "https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
-        {
-          headers: {
-            apikey: apikey,
-            authorization: `Bearer ${globalAccessToken}`,
-            "content-type": "application/json",
-            requesttimestamp: "28/12/2022 01:30:00 PM",
-            transactionid: "4",
-          },
-          body: JSON.stringify({
-            fueltype: fuelType,
-            brand: brandsArray,
-            namedlocation: namedLocation,
-            latitude: latitude,
-            longitude: longitude,
-            radius: radius,
-            sortby: sortByWhat,
-            sortascending: sortascending,
-          }),
-          method: "POST",
-        }
-      );
-      // END HERE )
-      let data = await response.json();
+async function runSearch() {
+  var searchPanel = document.getElementById("search-parent-container");
+  searchPanel.style.setProperty("display", "none");
 
-      await displayResult(data);
-      await generateSmallMaps(data);
-      loadingOverlayOff();
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  loadingOverlayOn();
 
-  async function runApp() {
-    loadingOverlayOn();
+  try {
+    let response = await fetch(
+      // if needed https://cors-anywhere.herokuapp.com/
+      // then, if needed go to https://cors-anywhere.herokuapp.com/corsdemo and click to get server permissions
+      "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/FuelPriceCheck/v2/fuel/prices/nearby",
+      {
+        headers: {
+          apikey: apikey,
+          authorization: `Bearer ${globalAccessToken}`,
+          "content-type": "application/json",
+          requesttimestamp: "28/12/2022 01:30:00 PM",
+          transactionid: "4",
+        },
+        body: JSON.stringify({
+          fueltype: fuelType,
+          brand: brandsArray,
+          namedlocation: namedLocation,
+          latitude: latitude,
+          longitude: longitude,
+          radius: radius,
+          sortby: sortByWhat,
+          sortascending: sortascending,
+        }),
+        method: "POST",
+      }
+    );
+    // END HERE )
+    let data = await response.json();
 
-    var para2 = document.createElement("p");
-    para2.setAttribute("id", "outPutGeoLocErr");
-
-    // geoloc Modal Element
-    y = document
-      .querySelector("#geoloc-perms-err .modal-body")
-      .appendChild(para2);
-    y.innerHTML = "Sup man";
-
-    // Top of page under heading insert
-    var para = document.createElement("p");
-    para.setAttribute("id", "getLocationOutput");
-
-    var h1Ele = document.querySelector("#main-h1");
-
-    h1Ele.parentNode.insertBefore(para, h1Ele.nextSibling);
-
-    x = document.getElementById("getLocationOutput");
-
-    await getLocation();
-
-    credentials = await getCredentials();
-    console.log("credentials in runApp(): " + credentials);
-
-    await Promise.all([
-      populateForm(credentials),
-      attachListenerToButton(),
-      addEventListenerToEVFuelOption(),
-    ]);
-    // https://stackoverflow.com/a/35612484/9095603
-
+    await displayResult(data);
+    await generateSmallMaps(data);
     loadingOverlayOff();
+  } catch (err) {
+    console.log(err);
   }
+}
 
-  runApp();
-});
+async function runApp() {
+  loadingOverlayOn();
+
+  var para2 = document.createElement("p");
+  para2.setAttribute("id", "outPutGeoLocErr");
+
+  // geoloc Modal Element
+  y = document
+    .querySelector("#geoloc-perms-err .modal-body")
+    .appendChild(para2);
+  y.innerHTML = "Sup man";
+
+  // Top of page under heading insert
+  var para = document.createElement("p");
+  para.setAttribute("id", "getLocationOutput");
+
+  var h1Ele = document.querySelector("#main-h1");
+
+  h1Ele.parentNode.insertBefore(para, h1Ele.nextSibling);
+
+  x = document.getElementById("getLocationOutput");
+
+  await getLocation();
+
+  credentials = await getCredentials();
+  console.log("credentials in runApp(): " + credentials);
+
+  await Promise.all([
+    populateForm(credentials),
+    attachListenerToButton(),
+    addEventListenerToEVFuelOption(),
+  ]);
+  // https://stackoverflow.com/a/35612484/9095603
+
+  loadingOverlayOff();
+}
+
+runApp();
+// });
 
 async function generateSmallMaps(main_array) {
   /* TODO 
@@ -910,7 +910,43 @@ videoModal.addEventListener("hide.bs.modal", (e) => {
 // History
 
 function saveHistory() {
-  var historyCardLi = document.getElementById("historyDiv");
+  
+  var savedFilter = {
+    savedlat: Number(latitude),
+    savedlng: Number(longitude),
+    savedfuelType: fuelOptionEle.value,
+    savedradius: radiusOptionEle.value,
+    savedsortByWhat: rankingOptionEle.value,
+  };
+
+  localStorage.setItem("AutoFill", JSON.stringify(savedFilter));
+}
+
+document.getElementById("autoFill-btn").addEventListener("click", function (e) {
+  e.preventDefault();
+
+  // var savedFilter = JSON.parse(localStorage.getItem("AutoFill"));
+
+  var fill = localStorage.getItem("AutoFill");
+if (fill !== null) {
+
+  var savedFilter = JSON.parse(fill);
+
+
+  latitude = `${savedFilter.savedlat}`;
+  longitude = `${savedFilter.savedlng}`;
+  fuelType= `${savedFilter.savedfuelType}`
+  radius = `${savedFilter.savedradius}`
+  sortByWhat = `${savedFilter.savedsortByWhat}`
+
+runSearch();
+}
+});
+
+
+/* Function that list History
+
+function saveHistory() {
 
   var timeSaved = new Date();
   var time = timeSaved.toLocaleTimeString("en-US");
@@ -923,6 +959,7 @@ function saveHistory() {
   };
 
   function storeNewSearch() {
+
     if (localStorage.getItem("recent-searches") == null) {
       localStorage.setItem("recent-searches", "[]");
     }
@@ -934,6 +971,7 @@ function saveHistory() {
 
     localStorage.setItem("recent-searches", JSON.stringify(savedSearch));
 
+    var historyCardLi = document.getElementById("historyDiv");
     var searchGroup = document.createElement("div");
     searchGroup.classList.add("list-group");
     historyCardLi.append(searchGroup);
@@ -962,25 +1000,12 @@ function saveHistory() {
 
 runSearch();
 
-      
       })
 
-      
     }
   }
 
   storeNewSearch();
 }
 
-
-
-
-
-
-// var viewHistory = document.getElementById('view-history')
-
-// viewHistory.addEventListener("click", function () {
-
-//   viewHistory.style.setProperty("display", "block");
-
-// })
+*/
