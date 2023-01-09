@@ -359,10 +359,7 @@ function displayResult(main_array){
   resultsCountEle.innerText = `${resultsCount} results found:`
   resultsContainer.appendChild(resultsCountEle)
   
-  var bigMap = document.createElement("img")
-  bigMap.setAttribute("src","assets/images/example-big-map.png")
-  bigMap.setAttribute("alt","Summary map")
-  resultsContainer.appendChild(bigMap)
+ 
 
   newArray = [];
   var current_code;

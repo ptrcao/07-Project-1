@@ -1,8 +1,171 @@
-#search-again-btn{
-  position: sticky;
+.card{
+  margin: 0 auto; /* Added */
+}
+
+.search-terms{
+font-size:110%;
+background: lightgrey;
+padding: 4px;
+color: black;
+}
+
+.warning-light-highlighted{
+color:red;
+background: RGBA(255,255,255,0.8);
+}
+
+#navbar{
+background:white;
+}
+
+body{
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0) 20%,
+  rgba(255,255,255,1)), url("../images/21888165_6505910\ freepik\ gas\ station.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.dark-highlighted{
+  color:white;
+  background-color:RGBA(42,39,39,0.50); 
+  padding: 4px;
+}
+
+/* Force white text */
+#results-container h2, #main-h1, #getLocationOutput, footer, footer a{
+  color: white;
+}
+
+#nsw-img{
+  background-image: url("../images/noun-new-south-wales-1951387.png");
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width:110px;
+  height:100px;
+  font-family: var(--bs-font-sans-serif);
+  padding: 6px;
+  }
+
+#main-h1{
+font-family: 'Rock Salt', cursive;
+}
+
+/* https://stackoverflow.com/a/61054967/9095603 */
+
+.overlay {
+  background-color:#EFEFEF;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  /* top: 40%; */
+  left: 0px;
+  /* opacity: 0.5; */
+  /* filter: alpha(opacity=50); */
+  display: none;
+}
+/* .spinner-grow{
+left: 50%; 
+position: absolute; 
+text-align: center; 
+top: 50%;
+} */
+/* sticky navbar or button */
+
+/* #search-again-btn{
+  position: fixed;
   padding: 5px;
   font-size: 16px;
   border-radius: 10px;
   bottom: 1rem;
   left: 100%;
+} */
+
+
+
+/* Sarah */
+
+
+/* 
+* Always set the map height explicitly to define the size of the div element
+* that contains the map. 
+*/
+#map {
+height: 800px;
+width: 100%;
+
+}
+
+/* 
+* Optional: Makes the sample page fill the window. 
+*/
+/* html,
+body {
+height: 100%;
+margin: 0;
+padding: 0;
+} */
+
+
+/*  History */
+.list-group-item {
+margin: 5px 20px;
+}
+
+#historyDiv {
+border : 5px solid;
+border-radius: 10px;
+padding: 10px;
+margin : 10px; 
+ /* display: none; */
+}
+
+#historyDiv > h1 {
+font-size: 3em;
+font-weight: bold;
+padding: 30px;
+text-align: center;
+
+}
+
+#view-history {
+border : 2px solid;
+border-radius: 10px;
+text-decoration: solid;
+padding: 5px;
+margin : 10px; 
+
+}
+
+
+
+  /* Sarah */
+
+  
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+ #map {
+  height: 800px;
+  width: 100%;
+  
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+/* html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
+
+#map {
+  height: 1000px;
+  width: 75%;
+  
 }

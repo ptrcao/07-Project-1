@@ -1,114 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Fuel Seeker</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link href="assets/css/index.css" rel="stylesheet" />
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Fuel Seeker</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link href="assets/css/index.css" rel="stylesheet" />
 
-  <!-- https://getbootstrap.com/docs/5.0/components/spinners/ -->
-  <!-- put the spinner at the top of the page for its CSS to make it full page -->
-  <div class="overlay d-flex justify-content-center align-items-center">
-    <h5>Please wait...</h5>
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-
-<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
-<!-- Modal -->
-<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Error: Geolocation permissions required</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Geolocation is not enabled. In order to use this search facility, you will need to enable geolocation permissions in your browser.</p>
-        <p>Instructions on how to enable geolocation in your browser are as follows:</p>
-          <ol>
-          <li>Go to your device Settings <b>></b> Privacy <b>></b> Location Services.</li>
-          <li>To the left of the web address, tap Lock.</li>
-          <li>Tap Permissions and then allow Location access.</li>
-        </ol>
-   
-        <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p> -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
+    <!-- Failed to load resource: the server responded with a status of 404 (Not Found) -->
+    <!-- Cannot GET /favicon.ico -->
+    <!-- Solution: https://stackoverflow.com/a/62742514/9095603 -->
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <body>
+    <!-- https://getbootstrap.com/docs/5.0/components/spinners/ -->
+    <!-- put the spinner at the top of the page for its CSS to make it full page -->
+    <div class="overlay d-flex justify-content-center align-items-center">
+      <h5>Please wait...</h5>
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
-<!-- Modal -->
-<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div id="modal-body" class="modal-body">
-        <span id="missing-text-before"></span>
-        <ul id="missing-inputs" style="list-style-type:none;">
-        </ul>
-        <span id="missing-text-after"></span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="geoloc-perms-err"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Error: Geolocation permissions required
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Geolocation is not enabled. In order to use this search facility,
+              you will need to enable geolocation permissions in your browser.
+            </p>
+            <p>
+              Instructions on how to enable geolocation in your browser are as
+              follows: ...
+            </p>
+            <ol>
+              <li>
+                Go to your device Settings <b>></b> Privacy <b>></b> Location
+                Services.
+              </li>
+              <li>To the left of the web address, tap Lock.</li>
+              <li>Tap Permissions and then allow Location access.</li>
+            </ol>
+
+          <!-- video modal -->
+          <button type="button" class="video-btn" data-bs-toggle="modal" data-bs-target="#videoModal" data-bs-src="https://www.youtube.com/embed/vZzUm3eR0xI"> How
+        </button>
+        <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="dbschemaModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                        </button>
+                        <div class="ratio ratio-16x9">
+                            <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p>  -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="container row" id="search-parent-container">
-  <h1 id="main-h1">Fuel Seeker</h1>
+    <!-- GEOMDAL -->
+    <!--  -->
 
+    <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="input-missing-modal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div id="modal-body" class="modal-body">
+            <span id="missing-text-before"></span>
+            <ul id="missing-inputs" style="list-style-type: none"></ul>
+            <span id="missing-text-after"></span>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<form>
-  <select id="fuel-select" data-trigger="" name="choices-single-defaul">
-    <option placeholder="" value="">Fuel type - Required</option>
-  </select>
+    <div class="container row" id="search-parent-container">
+      <h1 id="main-h1">Fuel Seeker</h1>
 
-  <select id="radius-select" data-trigger="">
-    <option placeholder="" value="">Within radius (km); unlimited by default</option>
-    <option value="5">Within 5 km</option>
-    <option value="10">Within 10 km</option>
-    <option value="15">Within 15 km</option>
-    <option value="20">Within 20 km</option>
-    <option value="25">Within 25 km</option>
-    <option value="30">Within 30 km</option>
-    <option value="50">Within 50 km</option>
-    <option value="unlimited">Unlimited by radius (km)</option>
-  </select>
+      <form>
+        <select id="fuel-select" data-trigger="" name="">
+          <option placeholder="" value="">Fuel type - Required</option>
+        </select>
 
-  <select  id="ranking-select" data-trigger="">
-    <option placeholder="" value="">ASC Sort by - Required</option>
-    <!-- <option value="Price">Price ASC</option>
+        <select id="radius-select" data-trigger="">
+          <option placeholder="" value="">
+            Within radius (km); unlimited by default
+          </option>
+          <option value="5">Within 5 km</option>
+          <option value="10">Within 10 km</option>
+          <option value="15">Within 15 km</option>
+          <option value="20">Within 20 km</option>
+          <option value="25">Within 25 km</option>
+          <option value="30">Within 30 km</option>
+          <option value="50">Within 50 km</option>
+          <option value="unlimited">Unlimited by radius (km)</option>
+        </select>
+
+        <select id="ranking-select" data-trigger="">
+          <option placeholder="" value="">ASC Sort by - Required</option>
+          <!-- <option value="Price">Price ASC</option>
     <option value="Distance">Distance ASC</option> -->
-  </select>
+        </select>
 
-  <div class="result-count">
-    Search from <span id="station-count"></span> stations across NSW</div>
-  <div>*Note that the price will be displayed as "0 cents/L" for electric vehicle charging stations.  However, the actual cost in $/kWh is not available via the API at this time.</div>
+        <div class="result-count">
+          Search from <span id="station-count"></span> stations across NSW
+        </div>
+        <div>
+          *Note that the price will be displayed as "0 cents/L" for electric
+          vehicle charging stations. However, the actual cost in $/kWh is not
+          available via the API at this time.
+        </div>
 
-    <button type="reset">RESET</button>
-    <button id="fetch" type="submit">Find stations</button>
-  </form>
+        <button type="reset">RESET</button>
+        <button id="fetch" type="submit">Find stations</button>
+      </form>
+    </div>
 
-</div>
- 
-<!-- Bootstrap modal: https://getbootstrap.com/docs/4.0/components/modal/ -->
+    <!-- Bootstrap modal: https://getbootstrap.com/docs/4.0/components/modal/ -->
 
-<!-- Modal -->
-<!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <!-- Modal -->
+    <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -130,21 +210,26 @@
   </div>
 </div> -->
 
+    <div class="container row">
+      <div id="results-container" class="card-deck">
+        <div id="map"></div>
+      </div>
 
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+      ></script>
 
+      <!-- for Sarah's part -->
+      <!-- <script async defer 
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDD-ZKd1E6dtFqQzmmTWiH7crVwjDeLjdA&callback=initMap">
+  </script> -->
 
-<!-- <div class="container row-cols-auto"> -->
-  <div id="results-container" class="card-deck"></div>
-
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-  <script src="assets/js/index-geo-api.js"></script>
-  <script src="assets/js/main.js"></script>
-</div>
-
-
-</body>
+      <!-- <script src="assets/js/index-geo-api.js"></script> -->
+      <script src="assets/js/main.js"></script>
+    </div>
+  </body>
 </html>
