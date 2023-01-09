@@ -11,7 +11,7 @@
 
 .warning-light-highlighted{
   color:red;
-  background: RGBA(255,255,255,0.8);
+  background: rgba(255,255,255,0.8);
 }
 
 #navbar{
@@ -26,18 +26,31 @@
     background-attachment: fixed;
   }
 
+  body{
+    background-image: linear-gradient(to bottom, rgba(255,255,255,1) 20%,
+    rgba(255,255,255,0)), url("../images/21888165_6505910\ freepik\ gas\ station.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .fa-exclamation-triangle{
+  color: #8B0000;
+  }
+  
+
   .dark-highlighted{
     color:white;
-    background-color:RGBA(42,39,39,0.50); 
-    padding: 4px;
+    background-color:rgba(42,39,39,0.50); 
+    padding: 2px;
   }
 
   /* Force white text */
-  #results-container h2, #main-h1, #getLocationOutput, footer, footer a{
+  .nsw-img, footer, footer a{
     color: white;
   }
 
-  #nsw-img{
+  .nsw-img{
     background-image: url("../images/noun-new-south-wales-1951387.png");
     display: inline-block;
     background-size: contain;

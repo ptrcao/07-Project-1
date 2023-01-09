@@ -37,16 +37,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Error: Geolocation permissions required</h5>
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-exclamation-triangle"></i> Error: Geolocation permissions required</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Geolocation is not enabled. In order to use this search facility, you will need to enable geolocation permissions in your browser.</p>
-        <p>Instructions on how to enable geolocation in your browser are as follows: ...</p>
+        <!-- <p id="dynamic-msg"></p> -->
         <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p> -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <h1 id="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
+        <button type="button" onclick="window.location.reload();" class="btn btn-secondary" data-bs-dismiss="modal">Reload after switching on geolocation</button>
         <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
       </div>
     </div>
@@ -69,6 +69,7 @@
         <span id="missing-text-after"></span>
       </div>
       <div class="modal-footer">
+        <h1 id="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -78,7 +79,7 @@
 
 
 <div class="container row" id="search-parent-container">
-  <h1 id="main-h1">FuelSeeker <span id="nsw-img">NSW</span></h1>
+  <h1 id="main-h1">FuelSeeker <span class="nsw-img">NSW</span></h1>
 
 <p class="result-count"><span class="dark-highlighted">Welcome motorist!</span></p>  
 
@@ -94,7 +95,7 @@
     <option value='' disabled selected>Fuel type</option>
   </select>
 
-  <p><span id="no-price-warning-EV" class="warning-light-highlighted" style="display:none;"><small>*Note that the price will be displayed as "0 cents/L" for electric vehicle (EV) charging stations.  This is because the actual cost in $/kWh is not available via the API at this time, but FuelSeeker still show you were the charging stations are.</small></span></p>
+  <p><span id="no-price-warning-EV" class="warning-light-highlighted" style="display:none;"><small>*Note that the price will be displayed as "0 cents/L" for electric vehicle (EV) charging stations.  This is because the actual cost in $/kWh is not available via the API at this time, but FuelSeeker still show you where the charging stations are.</small></span></p>
 
 </fieldset>
 
@@ -125,7 +126,7 @@
     <option value="Distance">Distance ASC</option> -->
   </select>
 
-  <p><span id="price-disable-EV" class="warning-light-highlighted" style="display:none;"><small>Sorting by <span class="search-terms">Price</span> is not available for Electric Vehicle charge searches.  Please select <span class="search-terms">Distance</span> instead.</small></span></p>
+  <p><span id="price-disable-EV" class="warning-light-highlighted" style="display:none;"><small>Sorting by <span class="search-terms">Price</span> is not available for Electric Vehicle charging station searches.  Please select <span class="search-terms">Distance</span> instead.</small></span></p>
 
 </fieldset>
 
@@ -174,7 +175,7 @@
 
   <footer class="text-center pt-3 pr-3 pl-3 pb-3" style="background-color: rgba(0, 0, 0, 0.6);">
   <!-- Copyright -->
-    <small>Disclaimer #1: this website does not purport to represent the NSW Government. Disclaimer #2: use at your own risk; FuelSeeker accepts no liabilities, and makes no guarantees on the accuracy of information on this website. | Image attributions as follows.  <a href="https://www.freepik.com/free-vector/cartoon-style-gas-station-background_21888165.htm">Image by pikisuperstar</a> on Freepik.  New South Wales by Support Designs from <a href="https://thenounproject.com/browse/icons/term/new-south-wales/" target="_blank" title="New South Wales Icons">Noun Project</a></small>. | © 2023 Copyright FuelSeeker
+    <small p-2>Disclaimer #1: this website does not purport to represent the NSW Government. Disclaimer #2: use at your own risk; FuelSeeker accepts no liabilities, and makes no guarantees on the accuracy of information on this website. | Image attributions as follows.  <a href="https://www.freepik.com/free-vector/cartoon-style-gas-station-background_21888165.htm">Image by pikisuperstar</a> on Freepik.  New South Wales by Support Designs from <a href="https://thenounproject.com/browse/icons/term/new-south-wales/" target="_blank" title="New South Wales Icons">Noun Project</a></small>. | © <span id="current-year"></span> Copyright FuelSeeker
 
   <!-- Copyright -->
 </footer>
