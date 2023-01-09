@@ -1,3 +1,10 @@
+var fill;
+var savedFilter;
+
+var fuelOptionIndex
+var radiusOptionIndex
+var SortByIndex
+
 var credentials;
 var fuelName;
 var sortByCode;
@@ -18,13 +25,37 @@ var y;
 
 var map;
 
+
+function saveHistory() {
+  var savedFilter = {
+      savedlat: Number(latitude),
+      savedlng: Number(longitude),
+      savedfuelType: fuelOptionEle.value,
+      savedradius: radiusOptionEle.value,
+      savedsortByWhat: rankingOptionEle.value,
+    };
+    localStorage.setItem("AutoFill", JSON.stringify(savedFilter));
+  }
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
 // initiates Map and stores the user geolocation
 
 async function initMap(main_array) {
   var myLatLng = { lat: Number(latitude), lng: Number(longitude) };
-  // var myLatLng = {
-  //  lat,
-  //  lng
+
 
   //centre map to the users current location
   map = new google.maps.Map(document.getElementById("map"), {
@@ -36,7 +67,7 @@ async function initMap(main_array) {
   var UserMarker = new google.maps.Marker({
     position: myLatLng,
     map: map,
-    title: "My Location",
+    title: `My Location {${latitude}, ${longitude}}`,
   });
 
   // adds radius around user location. This is defaulted before the user selects paramaters. Can change to toggle with radius selection.
@@ -51,7 +82,8 @@ async function initMap(main_array) {
     editable: false,
   });
 
-  //loop through array
+
+ //loop through array
   for (var i = 0; i < countOfReturnedResults; i++)
     addFuelMarkers(main_array.stations[i]);
 
@@ -73,13 +105,11 @@ async function initMap(main_array) {
   }
 }
 
-// SET GLOBALS
-
-// var globalAccessToken = "QdGf3YaifPEzy9rbYpwwKvhFDm6o";
 var globalAccessToken;
 
 // Define elements
 var resultsContainer = document.getElementById("results-container");
+
 
 // Define modals
 var inputMissingModal = new bootstrap.Modal(
@@ -95,15 +125,17 @@ var auth =
 var apikey = "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT";
 
 // Using free registered API
-// var auth = "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
+// var auth =
+//   "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
 // var apikey = "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4";
+
 
 var sortascending = "true";
 
 var fuelSelect = document.getElementById("fuel-select");
 
-// Geolocation API
 
+// Geolocation API
 var namedLocation = "Some location";
 
 var latitude;
@@ -130,35 +162,41 @@ var fuelType;
 var radius;
 var sortByWhat;
 
-/* Sarah's code */
 
-// document.addEventListener("DOMContentLoaded", () => {
-// https://flaviocopes.com/dom-ready/
 
-// load versus DOMContentLoaded:
-// The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
-// https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
 
-// FUNCTIONS
 
-// An on and off switch for the loading overlay which prevents user interaction while the page is being loaded or searches are executing
 
-function loadingOverlayOn() {
-  document
-    .getElementsByClassName("overlay")[0]
-    .style.setProperty("display", "block");
-}
-function loadingOverlayOff() {
-  document
-    .getElementsByClassName("overlay")[0]
-    .style.setProperty("display", "none", "important");
-}
+
+
+
+
+
+  // FUNCTIONS
+
+  // An on and off switch for the loading overlay which prevents user interaction while the page is being loaded or searches are executing
+
+  function loadingOverlayOn() {
+    document
+      .getElementsByClassName("overlay")[0]
+      .style.setProperty("display", "block");
+  }
+  function loadingOverlayOff() {
+    document
+      .getElementsByClassName("overlay")[0]
+      .style.setProperty("display", "none", "important");
+  }
+
+
+
+
+
 
 // You want to run the fetch to get the brands (full range is assumed for search) and fuelType (options) from the get go
 async function getCredentials() {
   try {
     let response = await fetch(
-      "https://cors-anywhere.herokuapp.com/https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
+      "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials",
       {
         headers: {
           accept: "application/json",
@@ -178,6 +216,11 @@ async function getCredentials() {
   }
 }
 
+
+
+
+
+
 async function populateForm(credentials) {
   try {
     console.log("Check globalAccessToken: " + globalAccessToken);
@@ -190,7 +233,6 @@ async function populateForm(credentials) {
           accept: "application/json",
           apikey: apikey,
           authorization: `Bearer ${credentials}`,
-          // "cache-control": "max-age=0",
           "content-type": "application/json; charset=utf-8",
           "if-modified-since": "25/12/2022 05:00:00 AM",
           requesttimestamp: "25/12/2022 05:00:00 AM",
@@ -200,19 +242,19 @@ async function populateForm(credentials) {
       }
     );
 
-    // console.log({response});
+    console.log({ response });
     let data = await response.json();
 
     // Add fuel types for form
     var fuelTypes = data.fueltypes;
 
-    // console.log({ fuelTypes });
+    console.log({ fuelTypes });
 
     for (let i = 0; i < fuelTypes.items.length; ++i) {
       fuelName = fuelTypes.items[i].name;
       fuelCode = fuelTypes.items[i].code;
-      // console.log({ fuelName });
-      // console.log({ fuelCode });
+      console.log({ fuelName });
+      console.log({ fuelCode });
       if (
         fuelName != "Ethanol 94 / Unleaded 91" &&
         fuelName != "Premium 95 / Premium 98" &&
@@ -230,22 +272,22 @@ async function populateForm(credentials) {
     // Add fuel brands - you will use all of them automatically in the search
     // Brands should be dynamic, as in theory new brands could be added and old ones phased out
     var fuelBrands = data.brands.items;
-    // console.table(fuelBrands);
+    console.table(fuelBrands);
 
     brandsArray = [];
     for (let i = 0; i < fuelBrands.length; ++i) {
       brandsArray.push(fuelBrands[i].name);
     }
 
-    // console.log({ brandsArray });
+    console.log({ brandsArray });
 
     // Dynamically get sort-by fields
 
     for (let i = 0; i < data.sortfields.items.length; ++i) {
       sortByCode = data.sortfields.items[i].code;
       sortByName = data.sortfields.items[i].name;
-      // console.log({ sortByCode });
-      // console.log({ sortByName });
+      console.log({ sortByCode });
+      console.log({ sortByName });
 
       document
         .getElementById("ranking-select")
@@ -254,28 +296,40 @@ async function populateForm(credentials) {
 
     // Dynamically display number of stations
     document.getElementById("station-count").innerText =
-      data.stations.items.length;
+      data.stations.items.length.toLocaleString();
+    // n.toLocaleString() to format a number with commas as thousands separators
+    // https://stackoverflow.com/a/17663871/9095603
   } catch (error) {
     console.log(error);
   }
 }
 
+
+
+
+
+
+
+
+
 async function attachListenerToButton() {
   document.getElementById("fetch").addEventListener("click", function (e) {
     e.preventDefault();
 
-    saveHistory();
     // Fire modal if geolocation unavailable
     if (!latitude || !longitude) {
       geolocMissingModal.show();
     } else {
+
       fuelType = fuelOptionEle.options[fuelOptionEle.selectedIndex].value;
-      // console.log(fuelType);
+      console.log(fuelType);
       fuelTypeInnerText =
         fuelOptionEle.options[fuelOptionEle.selectedIndex].innerText;
       console.log(fuelTypeInnerText);
+      // fuelTypeInnerText is only specifically used in the results to recall what the user chose.  It is not used anywhere else
+
       radius = radiusOptionEle.options[radiusOptionEle.selectedIndex].value;
-      // console.log(radius);
+      console.log(radius);
 
       if (radius) {
         radiusM = radius * 1000;
@@ -283,11 +337,9 @@ async function attachListenerToButton() {
 
       sortByWhat =
         rankingOptionEle.options[rankingOptionEle.selectedIndex].value;
-      // console.log(sortByWhat);
+      console.log(sortByWhat);
 
-      // saveHistory();
       // Add missing inputs modal
-      // if (!fuelType || !radius || !sortByWhat) {
       if (!fuelType || !radius || !sortByWhat) {
         // Clear out any previous error messages
         document.getElementById("missing-text-before").innerHTML = "";
@@ -299,13 +351,13 @@ async function attachListenerToButton() {
         var missingArray = [];
 
         if (!fuelType) {
-          missingArray.push("Fuel type");
+          missingArray.push("Option 1. Fuel type");
         }
         if (!radius) {
-          missingArray.push("Radius");
+          missingArray.push("Option 2. Radius");
         }
         if (!sortByWhat) {
-          missingArray.push("Rank by");
+          missingArray.push("Option 3. Sort by");
         }
 
         for (var i = 0; i < missingArray.length; i++) {
@@ -331,7 +383,7 @@ async function attachListenerToButton() {
         ).innerHTML = `Please try again after you have made your selection${plural}.`;
         document.getElementById(
           "exampleModalLongTitle"
-        ).innerHTML = `Missing selection${plural}!`;
+        ).innerHTML = `<i class="fas fa-exclamation-triangle"></i> Missing selection${plural}!`;
 
         // Fire the modal
         inputMissingModal.show();
@@ -344,17 +396,29 @@ async function attachListenerToButton() {
   });
 }
 
+
+
+
+
+
+// DISABLE "sort by Price" option for EV fuel type because this is not a meaningful setting since EV price is always $0, due to the API not having data for EV prices
+
 async function addEventListenerToEVFuelOption() {
   document
     .querySelector("#fuel-select")
     .addEventListener("change", function () {
       if (this.value == "EV") {
         console.log("EV selected");
+
+        // Reset the option to index 0 in case the user had already selected price - importantly, if this is not done, the user would be able to submit the search with price selected
+        document.getElementById("ranking-select").selectedIndex = 0;
+
         document
           .querySelector("#ranking-select option[value='Price']")
           .setAttribute("disabled", "");
         document.querySelector("#price-disable-EV").style.display = "inline";
-        document.querySelector("#no-price-warning-EV").style.display = "inline";
+        document.querySelector("#no-price-warning-EV").style.display =
+          "inline";
       } else if (this.value != "EV") {
         console.log("NOT EV selected");
         document
@@ -370,9 +434,19 @@ async function addEventListenerToEVFuelOption() {
     });
 }
 
+
+
+
+
+
+
+
+
+
+
 async function displayResult(main_array) {
-  // console.log({ main_array });
-  // console.log({ resultsContainer });
+  console.log({ main_array });
+  console.log({ resultsContainer });
 
   // Check if at least some stations fall inside radius
   var arrayDltR = [];
@@ -411,16 +485,9 @@ async function displayResult(main_array) {
   var resultsCountEle = document.createElement("h2");
 
   topStickyBar.setAttribute("id", "navbar");
-  // topStickyBar.innerHTML = 'this is sticky bar';
   topStickyBar.classList.add("fixed-bottom", "text-center");
 
   var body = document.getElementsByTagName("body")[0];
-
-  // existingNode.parentNode.insertBefore(newNode, existingNode);
-  // resultsContainer.parentNode.insertBefore(topStickyBar, resultsContainer);
-
-  // body.prepend(topStickyBar);
-  // body.append(topStickyBar);
   var footer = document.getElementsByTagName("footer")[0];
 
   footer.parentNode.insertBefore(topStickyBar, footer.nextSibling);
@@ -453,16 +520,16 @@ async function displayResult(main_array) {
   // be careful to ensure this limit is limiting to the TOP 10 results and not to the BOTTOM 10
   if (main_array.stations.length > 10) {
     countOfReturnedResults = 10;
-    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
+    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: 10 results returned (actually ${main_array.stations.length} found, but limited to best 10).<br><small>Scroll further down for stations specifics.</small>`;
   } else if (
     main_array.stations.length > 0 &&
     main_array.stations.length <= 10
   ) {
     countOfReturnedResults = main_array.stations.length;
-    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
+    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
   } else if (main_array.stations.length <= 0) {
     countOfReturnedResults = 0;
-    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByCode}</span>: No results found. Try broadening your search parameters.`;
+    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: No results found. Try broadening your search parameters.`;
     // unlike the conditions above, the append elements are required here because the program will now exit
     resultsContainer.appendChild(resultsCountEle);
     appendSearchAgainButton();
@@ -471,20 +538,12 @@ async function displayResult(main_array) {
 
   resultsContainer.appendChild(resultsCountEle);
 
-  // var bigMapContainer = document.createElement("div");
-  // bigMapContainer.setAttribute("class","row")
-
   var bigMap = document.createElement("div");
-  // bigMap.setAttribute("src", "assets/images/example-big-map.png");
-  // bigMap.setAttribute("alt", "Summary map");
   bigMap.setAttribute("id", "map");
   bigMap.classList.add("img-fluid", "card", "mb-3");
-  // resultsContainer.appendChild(bigMapContainer);
-  // bigMapContainer.appendChild(bigMap)
 
+  /* BIG MAP GETS POSTED HERE BY GOOGLE MAPS API */
   resultsContainer.appendChild(bigMap);
-
-  /* BIG MAP GOES HERE */
 
   for (var i = 0; i < main_array.stations.length; i++) {
     // you can't limit by using a fixed/static number because there will be cases where i does not even reach 20, for example, so use an if breakout condition:
@@ -510,45 +569,20 @@ async function displayResult(main_array) {
     console.log(main_array.stations[i].location.latitude);
     console.log(main_array.stations[i].location.longitude);
 
-    // var indexOfInterest = main_array.prices.findIndex(
-    //   function(sub) {
-
-    //     return sub.indexOf(
-    //       function(blah){
-    //         return blah.stationcode = current_stationid
-    //         // https://stackoverflow.com/a/39810268/9095603
-    //       }) !== -1;
-    //     // The indexOf() method returns -1 if the value is not found.
-    //     // https://www.w3schools.com/jsref/jsref_indexof_array.asp
-
-    // });
-
-    // main_array.prices.forEach(element => {console.log(typeof element )});
-
-    // console.table(main_array.prices);
+    console.table(main_array.prices);
 
     var indexOfInterest = main_array.prices.findIndex((sub) => {
-      // console.log({current_code})
-      // console.log({sub})
-      // console.log(sub['stationcode'])
 
-      // return sub.indexOf(number) !== -1;
       return sub["stationcode"] == current_code;
-
-      // return sub.indexOf(
-      //   sub.stationcode == current_code
-      //   ) !== -1;
-      // The indexOf() method returns -1 if the value is not found.
-      // https://www.w3schools.com/jsref/jsref_indexof_array.asp
     });
 
-    // console.log(indexOfInterest);
+    console.log(indexOfInterest);
 
     // Get price for corresponding
     var the_price = main_array.prices[indexOfInterest].price;
     var lastUpdated = main_array.prices[indexOfInterest].lastupdated;
-    // console.log({ the_price });
-    // console.log({ lastUpdated });
+    console.log({ the_price });
+    console.log({ lastUpdated });
 
     let resultsSlot = document.createElement("div");
     resultsSlot.setAttribute("class", `station-index-${indexOfInterest}`);
@@ -559,74 +593,68 @@ async function displayResult(main_array) {
     resultsSlot.innerHTML = `
 
 
-      <style>
-   
-      
-      </style>
+    <style>
+ 
+    
+    </style>
 
 <div id="${
       main_array.stations[i].code
     }" class="card mb-3" style="max-width: 768px;">
 
-  <div class="row g-0">
-    <div class="col-md-6">
-      <!-- for Dylan's little maps class = "map", and id = "map1"+ -->
-      <img id="map${i + 1}" class="img-fluid rounded-start map" >
-    </div>
-    <div class="col-md-6">
-      <div class="card-body">
+<div class="row g-0">
+  <div class="col-md-6">
+    <!-- for Dylan's little maps class = "map", and id = "map1"+ -->
+    <img id="map${i + 1}" class="img-fluid rounded-start map" >
+  </div>
+  <div class="col-md-6">
+    <div class="card-body">
 
-      <span id="favourite-tag">favourite<div><i class="fa-solid fa-heart"></i></div></span>
 
-        <h5>Rank #${rank} by ${sortByWhat}</h5>
-        <h3>${main_array.stations[i].name}</h3>
 
-        <div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${
+      <h5>Rank #${rank} by ${sortByWhat}</h5>
+      <h3>${main_array.stations[i].name}</h3>
+
+      <div style="padding:4px;">${the_price} cents/Litre</div><div style="padding:4px;">${
       main_array.stations[i].location.distance
     } km</div>
 
-        <p class="card-text">
-                
-        <table>
-        <tbody>
-        <tr><th>Station code:</th><td>${main_array.stations[i].code}</td></tr>
-        <tr><th>Street Address:</th><td>${
-          main_array.stations[i].address
-        }</td></tr>
-        <tr><th>Longitude:</th><td>${
-          main_array.stations[i].location.latitude
-        }</td></tr>
-        <tr><th>Latitude:</th><td>${
-          main_array.stations[i].location.longitude
-        }</td></tr>
-        </tbody>
-        </table>
+      
+              
+      <table>
+      <tbody>
+      <tr><th>Station code:</th><td>${main_array.stations[i].code}</td></tr>
+      <tr><th>Street Address:</th><td>${
+        main_array.stations[i].address
+      }</td></tr>
+      <tr><th>Longitude:</th><td>${
+        main_array.stations[i].location.latitude
+      }</td></tr>
+      <tr><th>Latitude:</th><td>${
+        main_array.stations[i].location.longitude
+      }</td></tr>
+      </tbody>
+      </table>
 
-        </p>
-        <p class="card-text"><small class="text-muted">Last price change at: ${lastUpdated}</small></p>
-        <button id="${
-          main_array.stations[i].code
-        }-save-btn" type="button">&#x2764; Save to favourites</button>
-        <button id="${
-          main_array.stations[i].code
-        }-unsave-btn" type="button">&#x1F494; Remove from favourites</button>
-        <p class="card-text"><small><a href="#">View and manage favourites</a></small></p>
-      </div>
+      <p class="card-text" style="bottom:0;"><small class="text-muted">Last at ${lastUpdated}</small></p>
     </div>
   </div>
 </div>
+</div>
 `;
-
-    toggleSaveToFav(main_array.stations[i].code);
   }
 
   appendSearchAgainButton();
 }
 
+
+
+
+
 function appendSearchAgainButton() {
+
   // Append search again button at end
   const stickPanelBottom = document.createElement("div");
-  // stickPanelBottom.classList.add("text-center", "btn-dark", "btn-lg");
   document.body.appendChild(stickPanelBottom);
 
   const searchAgainBtn = document.createElement("button");
@@ -636,17 +664,29 @@ function appendSearchAgainButton() {
   searchAgainBtn.classList.add("text-center", "btn-dark", "btn-lg");
 
   searchAgainBtn.setAttribute("onClick", "window.location.reload();");
-
-  // topStickyBar.appendChild(searchAgainBtn);
 }
 
+
+
+
+
+
+
+
+
+
+
+
 async function runSearch() {
+
+  saveHistory()
+
   var searchPanel = document.getElementById("search-parent-container");
   searchPanel.style.setProperty("display", "none");
 
   loadingOverlayOn();
-
   try {
+
     let response = await fetch(
       // if needed https://cors-anywhere.herokuapp.com/
       // then, if needed go to https://cors-anywhere.herokuapp.com/corsdemo and click to get server permissions
@@ -675,38 +715,90 @@ async function runSearch() {
     // END HERE )
     let data = await response.json();
 
-    runSearch();
     await displayResult(data);
-    await generateSmallMaps(data);
+
+    await Promise.all([initMap(data), generateSmallMaps(data)]);
+
     loadingOverlayOff();
   } catch (err) {
     console.log(err);
   }
+  
 }
 
+
+
+
 async function runApp() {
+
   loadingOverlayOn();
 
-  var para2 = document.createElement("p");
-  para2.setAttribute("id", "outPutGeoLocErr");
+
+  // Output current year to copyright stamp
+  // Get the current year in JavaScript
+  // https://stackoverflow.com/a/6002276/9095603
+  document.getElementById("current-year").innerHTML =
+    new Date().getFullYear();
 
   // geoloc Modal Element
-  y = document
+  // container for the dynamically-generated error in the modal
+  var para2 = document.createElement("p");
+  para2.setAttribute("id", "dynamic-msg");
+  dynamicModalMsg = document
     .querySelector("#geoloc-perms-err .modal-body")
     .appendChild(para2);
-  y.innerHTML = "Sup man";
 
+  // Container for the user's grabbed geolocation
   // Top of page under heading insert
   var para = document.createElement("p");
-  para.setAttribute("id", "getLocationOutput");
-
+  para.setAttribute("id", "dynamic-coordinates-display");
   var h1Ele = document.querySelector("#main-h1");
-
   h1Ele.parentNode.insertBefore(para, h1Ele.nextSibling);
+  dynamicCoordinatesDisplay = document.getElementById(
+    "dynamic-coordinates-display"
+  );
 
-  x = document.getElementById("getLocationOutput");
+  // getCurrentPosition doesn't return anything, you have to "promisify" it first:
+  // https://stackoverflow.com/a/67246644/9095603
 
-  await getLocation();
+  // MDN: GeolocationPositionError
+  // https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError#instance_properties
+
+  try {
+    console.log("getting location...");
+    let location = await getLocation();
+    console.log("got location");
+    console.log(location);
+    console.log(location.coords.latitude);
+    latitude = location.coords.latitude;
+    latitude = latitude.toString();
+    longitude = location.coords.longitude;
+    longitude = longitude.toString();
+    dynamicCoordinatesDisplay.innerHTML = `<p><em><i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${latitude}, Longitude: ${longitude} }</em></p>`;
+  } catch (e) {
+    console.log(e);
+    console.log("ERROR");
+    // console.log(e.message)
+    if (e.PERMISSION_DENIED) {
+      console.log("User denied the request for Geolocation.");
+      dynamicModalMsg.innerHTML = `Geolocation is not enabled.  In order to use this search facility, you will first need to enable geolocation permissions in your browser.<br><br><i class="fa-solid fa-arrow-up-right-from-square"></i> See <a href="https://docs.buddypunch.com/en/articles/919258-how-to-enable-location-services-for-chrome-safari-edge-and-android-ios-devices-gps-setting" target="_blank">instructions</a> on how to enable geolocation in your browser.  Then feel free to reload to try again once you have switched on location services.`;
+      geolocMissingModal.show();
+    } else if (e.POSITION_UNAVAILABLE) {
+      dynamicModalMsg.innerHTML = "Location information is unavailable.";
+      geolocMissingModal.show();
+    } else if (e.TIMEOUT) {
+      dynamicModalMsg.innerHTML =
+        "The request to get user location timed out.";
+      geolocMissingModal.show();
+    } else if (e.UNKNOWN_ERROR) {
+      dynamicModalMsg.innerHTML = "An unknown error occurred.";
+      geolocMissingModal.show();
+    }
+
+    return;
+  }
+
+
 
   credentials = await getCredentials();
   console.log("credentials in runApp(): " + credentials);
@@ -718,11 +810,95 @@ async function runApp() {
   ]);
   // https://stackoverflow.com/a/35612484/9095603
 
+
+
+
+  if (localStorage.getItem("AutoFill") === null) {
+    console.log("autofill is null")}
+    else{console.log('localStorage has something')
+    console.log(localStorage.getItem("AutoFill"))
+    console.log(JSON.parse(localStorage.getItem("AutoFill")))
+  }
+
+
+
+  
+
+
+  fill = localStorage.getItem("AutoFill");
+  console.log(fill);
+
+if (fill !== null) {
+
+  savedFilter = JSON.parse(fill);
+  console.log('savedFilter: ' + savedFilter)
+//   latitude = `${savedFilter.savedlat}`;
+//   longitude = `${savedFilter.savedlng}`;
+
+ 
+
+  // GET THE INDICES OF SAVED CHOICES
+  fuelOptionIndex = document.querySelector(`#fuel-select option[value=${savedFilter.savedfuelType}]`).index
+
+  radiusOptionIndex = document.querySelector(`#radius-select option[value="${savedFilter.savedradius}"]`).index
+  
+  SortByIndex = document.querySelector(`#ranking-select option[value=${savedFilter.savedsortByWhat}]`).index
+
+}
+
+  // ADD LISTENER TO THE AUTOFILL BUTTON
+
+  document.getElementById("autofill-btn").addEventListener("click", function () {
+    // e.preventDefault();
+  
+    // GET SAVED CHOICES
+
+    if (fill !== null) {
+  
+    // SET THE SELECTS TO THE INDICES ABOVE
+    document.querySelector("#fuel-select").options[fuelOptionIndex].selected = true;
+
+
+    document.querySelector("#radius-select").options[radiusOptionIndex].selected = true;
+
+    document.querySelector("#ranking-select").options[SortByIndex].selected = true;
+
+    if (fill !== null) {
+    document.querySelector("#autofill-btn").disabled = false;
+    // to use disabled in the first place, you need to have the btn Bootsrap class
+    }
+    // MOVED ELSEWHERE TO MAKE IT WORK
+  }
+  // runSearch();
+  });
+
+
+
+
   loadingOverlayOff();
 }
 
-runApp();
-// });
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // https://flaviocopes.com/dom-ready/
+
+  // load versus DOMContentLoaded:
+  // The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets, scripts, iframes, and images. This is in contrast to DOMContentLoaded, which is fired as soon as the page DOM has been loaded, without waiting for resources to finish loading.
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
+
+  
+  runApp();
+  
+});
+
+
+
+// END brackets for DOMContentLoaded event listener
 
 async function generateSmallMaps(main_array) {
   /* TODO 
@@ -730,23 +906,10 @@ https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=
 */
 
   fuelRequest = main_array;
-  // console.log({ fuelRequest });
-
-  //console.log(fuelRequest.stations[0].location.latitude);
-  //console.log(fuelRequest.stations[0].location.longitude);
-
-  /*for loop searching for each map, to run on this page being loaded */
-  /* only top 5 stations */
-
-  // var mapList = document.getElementsByClassName("map");
-  // console.log(mapList);
-  // var maxStations = 4;
-
-  // for (var i = 0; i < mapList.length; i++) {
+  console.log({ fuelRequest });
+  
   for (var i = 0; i < countOfReturnedResults; i++) {
-    // console.log({ mapList });
-    // console.log("maplist length: " + mapList.length);
-    // console.log(fuelRequest.stations[i].location.latitude);
+    
     calcRoute(`map${i + 1}`, i);
   }
 }
@@ -756,16 +919,17 @@ https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=
 function calcRoute(mapLabel, station_iter) {
   const map = document.getElementById(mapLabel);
 
-  var orig = { lat: -33.9106, lng: 151.1564 };
+  var orig = { lat: Number(latitude), lng: Number(longitude) };
+  console.log(orig);
+
   var dest = {
     lat: fuelRequest.stations[station_iter].location.latitude,
     lng: fuelRequest.stations[station_iter].location.longitude,
   };
 
-  /*
-var orig = {lat: 40.71303542062185, lng: -74.00801175633978} // user location ;
-var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station ;
-*/
+  console.log(dest.lat);
+  console.log(dest.lng);
+
   var start = orig.lat + "," + orig.lng;
   var end = dest.lat + "," + dest.lng;
 
@@ -780,9 +944,9 @@ var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station 
       travelMode: "DRIVING",
     },
     (response, status) => {
-      // console.log(response);
-      // console.log(response.routes[0].legs[0].start_location);
-      // console.log(status);
+      console.log(response);
+      console.log(response.routes[0].legs[0].start_location);
+      console.log(status);
       var path = response.routes[0].overview_polyline;
       var markers = [];
       var waypoints_labels = [
@@ -822,195 +986,13 @@ var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station 
   );
 }
 
-// check if location setting has been turned off in users browser
-// https://stackoverflow.com/a/14862073/9095603
 
-async function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    y.innerHTML = "Geolocation is not supported by this browser.";
-    geolocMissingModal.show();
-  }
-}
-
-function showPosition(position) {
-  latitude = position.coords.latitude;
-  latitude = latitude.toString();
-  // console.log({latitude})
-  longitude = position.coords.longitude;
-  longitude = longitude.toString();
-  // console.log({longitude})
-
-  x.innerHTML = `<p><em><i class="fa-solid fa-location-crosshairs"></i> Your location detected as { Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude} }</em></p>`;
-}
-
-function showError(error) {
-  switch (error.code) {
-    case error.PERMISSION_DENIED:
-      y.innerHTML = "User denied the request for Geolocation.";
-      geolocMissingModal.show();
-      break;
-    case error.POSITION_UNAVAILABLE:
-      y.innerHTML = "Location information is unavailable.";
-      geolocMissingModal.show();
-      break;
-    case error.TIMEOUT:
-      y.innerHTML = "The request to get user location timed out.";
-      geolocMissingModal.show();
-      break;
-    case error.UNKNOWN_ERROR:
-      y.innerHTML = "An unknown error occurred.";
-      geolocMissingModal.show();
-      break;
-  }
-}
-
-// console.log(runSearch(data))
-
-function toggleSaveToFav(cardId) {
-  console.log("Its the card id" + { cardId });
-
-  var saveFav = `${cardId}`;
-
-  var saveToFavBtn = document.getElementById(`${cardId}-save-btn`);
-  console.log({ saveToFavBtn });
-  saveToFavBtn.addEventListener("click", function () {
-    saveToFavBtn.style.setProperty("display", "none");
-
-    localStorage.setItem("favorites", JSON.stringify(displayResult(saveFav)));
-  });
-
-  var unSaveToFavBtn = document.getElementById(`${cardId}-unsave-btn`);
-  console.log({ unSaveToFavBtn });
-  unSaveToFavBtn.addEventListener("click", function () {
-    unSaveToFavBtn.style.setProperty("display", "none");
-  });
-}
-
-var videoBtn = document.querySelector(".video-btn");
-var videoModal = document.getElementById("videoModal");
-var video = document.getElementById("video");
-var videoSrc;
-
-videoBtn.addEventListener("click", function (e) {
-  videoSrc = videoBtn.getAttribute("data-bs-src");
-});
-
-videoModal.addEventListener("shown.bs.modal", (e) => {
-  video.setAttribute(
-    "src",
-    videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0"
+// getCurrentPosition doesn't return anything, you have to "promisify" it first:
+// https://stackoverflow.com/a/67246644/9095603
+let getLocation = () =>
+  new Promise((resolve, reject) =>
+    navigator.geolocation.getCurrentPosition(resolve, reject)
   );
-});
 
-videoModal.addEventListener("hide.bs.modal", (e) => {
-  video.setAttribute("src", videoSrc);
-});
-
-// History
-
-function saveHistory() {
-  
-  var savedFilter = {
-    savedlat: Number(latitude),
-    savedlng: Number(longitude),
-    savedfuelType: fuelOptionEle.value,
-    savedradius: radiusOptionEle.value,
-    savedsortByWhat: rankingOptionEle.value,
-  };
-
-  localStorage.setItem("AutoFill", JSON.stringify(savedFilter));
-}
-
-document.getElementById("autoFill-btn").addEventListener("click", function (e) {
-  e.preventDefault();
-
-  // var savedFilter = JSON.parse(localStorage.getItem("AutoFill"));
-
-  var fill = localStorage.getItem("AutoFill");
-if (fill !== null) {
-
-  var savedFilter = JSON.parse(fill);
-
-  latitude = `${savedFilter.savedlat}`;
-  longitude = `${savedFilter.savedlng}`;
-  fuelType= `${savedFilter.savedfuelType}`
-  fuelOptionEle.innerHTML = fuelType
-  radius = `${savedFilter.savedradius}`
-  radiusOptionEle.innerHTML = radius
-  sortByWhat = `${savedFilter.savedsortByWhat}`
-  rankingOptionEle.innerHTML = sortByWhat
-
-}
-
-runSearch();
-
-});
-
-
-/* Function that list History
-
-function saveHistory() {
-
-  var timeSaved = new Date();
-  var time = timeSaved.toLocaleTimeString("en-US");
-
-  var savedFilter = {
-    timeSaved: time,
-    savedfuelType: fuelOptionEle.value,
-    savedradius: radiusOptionEle.value,
-    savedsortByWhat: rankingOptionEle.value,
-  };
-
-  function storeNewSearch() {
-
-    if (localStorage.getItem("recent-searches") == null) {
-      localStorage.setItem("recent-searches", "[]");
-    }
-
-    var savedSearch = JSON.parse(localStorage.getItem("recent-searches"));
-    console.log(savedSearch);
-
-    savedSearch.push(savedFilter);
-
-    localStorage.setItem("recent-searches", JSON.stringify(savedSearch));
-
-    var historyCardLi = document.getElementById("historyDiv");
-    var searchGroup = document.createElement("div");
-    searchGroup.classList.add("list-group");
-    historyCardLi.append(searchGroup);
-
-    for (var i = 0; i < savedSearch.length; i++) {
-      var recent = savedSearch[i];
-
-      console.log(recent);
-
-      var searchLi = document.createElement("button");
-      searchLi.classList.add("list-group-item");
-      searchLi.innerHTML = `time : ${recent.timeSaved} , fueltype : ${recent.savedfuelType}, raduis : ${recent.savedradius}, sortBy: ${recent.savedsortByWhat}`;
-      searchGroup.appendChild(searchLi);
-
-      searchLi.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        console.log(recent)
-
-      fuelCode = `${recent.savedfuelType}`
-      console.log(fuelCode)
-      radiusM = `${recent.savedradius}`
-      console.log(radiusM)
-      rank = `${recent.savedsortByWhat}`
-      console.log(rank)
-
-runSearch();
-
-      })
-
-    }
-  }
-
-  storeNewSearch();
-}
-
-*/
+// // check if location setting has been turned off in users browser
+// // https://stackoverflow.com/a/14862073/9095603
