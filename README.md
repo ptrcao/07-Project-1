@@ -1,5 +1,14 @@
 # Fuel Seeker NSW
 
+> Repository URL:
+> https://github.com/ptrcao/07-Project-1.git
+
+> App URL:
+> https://ptrcao.github.io/07-Project-1/
+
+
+
+
 ## Description
 
 Fuel Seeker is an application that allows users to search for Fuel Nearby to their location. Users can search by Fuel Type, Price and Distance.
