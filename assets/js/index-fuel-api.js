@@ -1075,8 +1075,13 @@ if (fill !== null) {
     document.querySelector("#ranking-select").options[SortByIndex].selected = true;
 
     if (fill !== null) {
-    document.querySelector("#autofill-btn").disabled = false;
+    // document.querySelector("#autofill-btn").disabled = false;
     // to use disabled in the first place, you need to have the btn Bootsrap class
+
+    document.querySelector("#autofill-btn").removeAttribute("style")
+    document.querySelector("#autofill-btn").addAttribute("style")
+    document.querySelector("#autofill-btn").style.display = 'inline';
+
     }
     // MOVED ELSEWHERE TO MAKE IT WORK
   }
@@ -1229,7 +1234,7 @@ var dest = {lat: 40.71580432662713, lng: -73.99684223456448}  // petrol station 
       );
       markers = markers.join("&");
       map.src =
-        "https://maps.googleapis.com/maps/api/staticmap?center=-33.9106,151.1564&zoom=12&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&maptype=roadmap&path=enc:" +
+        `https://maps.googleapis.com/maps/api/staticmap?center=${Number(latitude)},${Number(longitude)}&zoom=12&size=400x400&key=AIzaSyAe5ZUE7_aAt_XBV7JwtjNH8Yt6piWzNhg&maptype=roadmap&path=enc:` +
         path +
         "&" +
         markers;
