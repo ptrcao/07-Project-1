@@ -3,29 +3,80 @@
 ## Description
 
 Fuel Seeker is an application that allows users to search for Fuel Nearby to their location. Users can search by Fuel Type, Price and Distance.
+The projct uses two Third Party API's.
+ - NSW Fuel API - a governement API which is used to get the Nearby Fuel Prices across NSW.
+ - Google Maps Javascript API - used to display both Interactive and Static Maps that show the location of Fuel Stations and directions from the Users location. 
+
+ This app was developed as finding cheap fuel is important to alot of people and there was few other options out there, and they did not have all of the features we have included. 
 
 
-Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
 
-- What was your motivation?
-- Why did you build this project? (Note: the answer is not "Because it was a homework assignment.")
-- What problem does it solve?
-- What did you learn?
+## User Story
+
+```
+AS A motorist
+I WANT to search for Fuel Nearby
+SO THAT I can find the cheapest or closest fuel to my current location
+```
+
+## Acceptance Criteria
+
+```
+GIVEN I want to search the API for Fuel nearby
+WHEN I open the browser
+THEN I am prompted to allow my location permissions
+WHEN I block the request for location
+THEN I am prompted with a modal that includes a link on how to enable location.
+WHEN I select the Fuel Type, Radius and Sort by Distance options
+THEN I am returned a maximum of 10 Fuel Stations ranked by Distance
+WHEN I select the Fuel Type, Radius and Sort by Price Options
+THEN I am returned a maximum of 10 Fuel Stations ranked by Price
+WHEN I dont select Fuel Type, Radius and Sort by options
+THEN I am prompted with a modal that tells me missing selections
+WHEN I select electric vehicle (EV) charge as the fuel type,
+THEN I am presented with a disclaimer about limited pricing information, and the Sort by Price option is disabled
+WHEN I select Find Station button
+THEN I am presented with a map that shows the 10 stations with a marker within the chosen radius, I am also presented with detailed results cards for each staion, including mao directions visualised
+WHEN I select find again button
+THEN I am returned to the landing page.
+WHEN I select auto fill based on last search button
+THEN the input fields are auto-filled based on my last search
+WHEN I select reset button
+THEN the input fields are cleared
+
+```
 
 
-## Installation
+## Technology
+- HTML
+- CSS
+- Javascript
+- Bootstrap
 
-What are the steps required to install your project? Provide a step-by-step description of how to get the development environment running.
+- Fontawesome - https://fontawesome.com/
+- Google fonts - https://developers.google.com/fonts
+
+### APIs
+- NSW Fuel API
+- Google Maps Javascript API
+- Geolocation
 
 ## Usage
 
-Provide instructions and examples for use. Include screenshots as needed.
+The user will be promted to allow their geolocation to be read when they open their browser to the Landing page. Once confirmed the user can select their Input Parameters and click Find Station to return results. 
 
-To add a screenshot, create an `assets/images` folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
+![This shows the landing page where uses can inlcude there Fuel Choice, Radius and sort by options](./assets/images/FuelSeeker_Landing.PNG)
 
-    ```md
-    ![alt text](assets/images/screenshot.png)
-    ```
+The results are returned showing a Large Google Map with the Users location and all of the Fuel Markers places on the Map.
+
+![This shows a large map with the users location and markers of the fuel stations](./assets/images/largeMap.PNG)
+
+There is also a small staic map for each result showing the directions from A (User Location) to B (Fuel Location)
+
+![This shows a small map with the users location and direction to each specific fuel station](./assets/images/smal_map_single.PNG)
+
+
+
 
 ## Credits
 
@@ -36,19 +87,5 @@ To add a screenshot, create an `assets/images` folder in your repository and upl
 
 
 
-If you used any third-party assets that require attribution, list the creators with links to their primary web presence in this section.
 
-If you followed tutorials, include links to those here as well.
-
-## License
-
-The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to [https://choosealicense.com/](https://choosealicense.com/).
-
----
-
-
-
-## Features
-
-If your project has a lot of features, list them here.
 
