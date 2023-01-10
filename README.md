@@ -19,25 +19,9 @@ I WANT to search for Fuel Nearby
 SO THAT I can find the cheapest or closest fuel to my current location
 ```
 
-## Acceptance Criteria
 
-```
-GIVEN I want to search the APP for Fuel nearby
-WHEN I Open the browser
-THEN I am prompted to allow my location permissions
-WHEN I select the Fuel Type, Radius and Sort by options of Distance
-THEN I am returned a maximum of 10 Fuel Stations ranked by Distance
-WHEN I select the Fuel Type, Radius and Sort by options of Price
-THEN I am returned a maximum of 10 Fuel Stations ranked by Price 
-WHEN I 
-THEN t
-WHEN I 
-THEN I 
-```
 
-## Requirements
-
-### Technology
+## Technology
 - HTML
 - CSS
 - Javascript
@@ -50,16 +34,25 @@ THEN I
 - NSW Fuel API
 - Google Maps Javascript API
 - Geolocation
+
 ## Usage
 
-Screenshots
+The user will be promoted to allow their geolocation to be read when they open their browser to the Landing page. Once confirmed the user can select their Input Parameters and click Find Staion to return results. 
 
-Provide instructions and examples for use. Include screenshots as needed.
+![This shows the landing page where uses can inlcude there Fuel Choice, Radius and sort by options](./assets/images/FuelSeeker_Landing.PNG)
+
+The results are returned showing a Large Google Map with the Users location and all of the Fuel Markers places on the Map.
+
+![This shows a large map with the users location and markers of the fuel stations](./assets/images/largeMap.PNG)
+
+
+
+![This shows a small map with the users location and direction to each specific fuel station](./assets/images/smal_map_single.PNG)
 
 
 
 
-## Contributors
+## Credits
 
 - Peter Cao - https://github.com/ptrcao, 
 - Joana Villajuan - https://github.com/joanavillajuan
