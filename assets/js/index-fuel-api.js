@@ -5,6 +5,8 @@ var fuelOptionIndex
 var radiusOptionIndex
 var SortByIndex
 
+var arrayDltR;
+
 var credentials;
 var fuelName;
 var sortByCode;
@@ -194,6 +196,10 @@ var inputMissingModal = new bootstrap.Modal(
 );
 var geolocMissingModal = new bootstrap.Modal(
   document.getElementById("geoloc-perms-err")
+);
+
+var noResultsModal = new bootstrap.Modal(
+  document.getElementById("no-results-modal")
 );
 
 // Using test API
@@ -565,7 +571,7 @@ async function displayResult(main_array) {
   console.log({ resultsContainer });
 
   // Check if at least some stations fall inside radius
-  var arrayDltR = [];
+  arrayDltR = [];
   for (var i = 0; i < main_array.stations.length; i++) {
     console.log("distance: " + main_array.stations[i].location.distance);
     console.log({ radius });
@@ -585,12 +591,14 @@ async function displayResult(main_array) {
     console.log(
       "No service stations were found inside your specified radius.  Please broaden your radius and try again."
     );
-    var resultsCountEle = document.createElement("div");
-    resultsCountEle.innerText =
-      "No service stations were found inside your specified radius.  Please broaden your radius and try again.";
-    resultsContainer.appendChild(resultsCountEle);
+    // var resultsCountEle = document.createElement("div");
+    // resultsCountEle.innerText =
+    //   "No service stations were found inside your specified radius.  Please broaden your radius and try again.";
+    // resultsContainer.appendChild(resultsCountEle);
 
-    appendSearchAgainButton();
+    noResultsModal.show();
+
+    // appendSearchAgainButton();
 
     // then exit the function
     return;
@@ -652,7 +660,10 @@ async function displayResult(main_array) {
     resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: ${main_array.stations.length} results found.<br><small>Scroll further down for stations specifics.</small>`;
   } else if (main_array.stations.length <= 0) {
     countOfReturnedResults = 0;
-    resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: No results found. Try broadening your search parameters.`;
+    // resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: No results found. Try broadening your search parameters.`;
+
+    noResultsModal.show();
+
     // unlike the conditions above, the append elements are required here because the program will now exit
     resultsContainer.appendChild(resultsCountEle);
     appendSearchAgainButton();
@@ -890,12 +901,14 @@ async function runSearch() {
     let data = await response.json();
     // is .json the same as JSON.parse() ?
 
+    
     await displayResult(data);
     // window.initMap = initMap;
 
-    //
     // if(countOfReturnedResults != 0){
+    if (countOfReturnedResults > 0){
     await Promise.all([initMap(data), generateSmallMaps(data)]);
+    }
     // }
 
     loadingOverlayOff();

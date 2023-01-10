@@ -55,6 +55,34 @@
   </div>
 </div>
 
+
+
+
+<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+<!-- Modal -->
+<div  class="modal fade" id="no-results-modal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-exclamation-triangle"></i> No results found inside your radius</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        No service stations were found inside your specified radius.  Please broaden your radius and try again.
+      </div>
+      <div class="modal-footer">
+        <h1 id="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
+        <button type="button" onclick="window.location.reload();" class="btn btn-secondary" data-bs-dismiss="modal">Try again</button>
+        <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
 <div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="" aria-hidden="true">
