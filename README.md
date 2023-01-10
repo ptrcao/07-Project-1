@@ -19,6 +19,29 @@ I WANT to search for Fuel Nearby
 SO THAT I can find the cheapest or closest fuel to my current location
 ```
 
+## Acceptance Criteria
+
+```
+GIVEN I want to search the API for Fuel nearby
+WHEN I open the browser
+THEN I am prompted to allow my location permissions
+WHEN I block the request for location
+THEN I am prompted with a modal that includes a link on how to enable location.
+WHEN I select the Fuel Type, Radius and Sort by Distance options
+THEN I am returned a maximum of 10 Fuel Stations ranked by Distance
+WHEN I select the Fuel Type, Radius and Sort by Price Options
+THEN I am returned a maximum of 10 Fuel Stations ranked by Price
+WHEN I dont select Fuel Type, Radius and Sort by options
+THEN I am prompted with a modal that tells me missing selections
+WHEN I select Find Station button
+THEN I am presented with a map that shows the 10 stations with a marker within the chosen radius, I am also presented with detailed results cards for each staion, including mao directions visualised
+WHEN I select find again button
+THEN I am returned to the landing page.
+WHEN I select auto fill based on last search button
+THEN the input fields are auto-filled based on my last search
+WHEN I select reset button
+THEN the input fields are cleared
+```
 
 
 ## Technology
