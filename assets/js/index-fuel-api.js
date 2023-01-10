@@ -1063,6 +1063,12 @@ if (fill !== null) {
   
   SortByIndex = document.querySelector(`#ranking-select option[value=${savedFilter.savedsortByWhat}]`).index
 
+
+
+    document.querySelector("#autofill-btn").disabled = false;
+    
+    
+
 }
 
 
@@ -1087,15 +1093,7 @@ if (fill !== null) {
 
     document.querySelector("#ranking-select").options[SortByIndex].selected = true;
 
-    if (fill !== null) {
-    // document.querySelector("#autofill-btn").disabled = false;
-    // to use disabled in the first place, you need to have the btn Bootsrap class
-
-    document.querySelector("#autofill-btn").removeAttribute("style")
-    document.querySelector("#autofill-btn").addAttribute("style")
-    document.querySelector("#autofill-btn").style.display = 'inline';
-
-    }
+  
     // MOVED ELSEWHERE TO MAKE IT WORK
   }
   // runSearch();

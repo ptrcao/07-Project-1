@@ -2,6 +2,11 @@
     min-height:100vh;
   } */
   
+  #autofill-btn{
+    background: white;
+    border-radius: 5px;
+  }
+
   .card{
     margin: 0 auto; /* Added */
   }
