@@ -33,6 +33,8 @@ WHEN I select the Fuel Type, Radius and Sort by Price Options
 THEN I am returned a maximum of 10 Fuel Stations ranked by Price
 WHEN I dont select Fuel Type, Radius and Sort by options
 THEN I am prompted with a modal that tells me missing selections
+WHEN I select electric vehicle (EV) charge as the fuel type,
+THEN I am presented with a disclaimer about limited pricing information, and the Sort by Price option is disabled
 WHEN I select Find Station button
 THEN I am presented with a map that shows the 10 stations with a marker within the chosen radius, I am also presented with detailed results cards for each staion, including mao directions visualised
 WHEN I select find again button
@@ -41,6 +43,7 @@ WHEN I select auto fill based on last search button
 THEN the input fields are auto-filled based on my last search
 WHEN I select reset button
 THEN the input fields are cleared
+
 ```
 
 
@@ -60,7 +63,7 @@ THEN the input fields are cleared
 
 ## Usage
 
-The user will be promoted to allow their geolocation to be read when they open their browser to the Landing page. Once confirmed the user can select their Input Parameters and click Find Staion to return results. 
+The user will be promted to allow their geolocation to be read when they open their browser to the Landing page. Once confirmed the user can select their Input Parameters and click Find Station to return results. 
 
 ![This shows the landing page where uses can inlcude there Fuel Choice, Radius and sort by options](./assets/images/FuelSeeker_Landing.PNG)
 
@@ -68,7 +71,7 @@ The results are returned showing a Large Google Map with the Users location and 
 
 ![This shows a large map with the users location and markers of the fuel stations](./assets/images/largeMap.PNG)
 
-
+There is also a small staic map for each result showing the directions from A (User Location) to B (Fuel Location)
 
 ![This shows a small map with the users location and direction to each specific fuel station](./assets/images/smal_map_single.PNG)
 
