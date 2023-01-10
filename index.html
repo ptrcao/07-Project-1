@@ -12,7 +12,7 @@
   <link rel="shortcut icon" href="#">
 
   <!-- Fontawesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
   <!-- Google fonts -->
 
@@ -35,11 +35,11 @@
 
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
-<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-labelledby="" aria-hidden="true">
+<div  class="modal fade" id="geoloc-perms-err" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-exclamation-triangle"></i> Error: Geolocation permissions required</h5>
+        <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Error: Geolocation permissions required</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -47,7 +47,7 @@
         <!-- <p>Alternatively, you can just provide your postcode and suburb for a general area search instead - however, proximity information and sorting will only be available with browser geolocation enabled.</p> -->
       </div>
       <div class="modal-footer">
-        <h1 id="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
+        <h1 class="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
         <button type="button" onclick="window.location.reload();" class="btn btn-secondary" data-bs-dismiss="modal">Reload after switching on geolocation</button>
         <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
       </div>
@@ -60,18 +60,18 @@
 
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
-<div  class="modal fade" id="no-results-modal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+<div  class="modal fade" id="no-results-modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-exclamation-triangle"></i> No results found inside your radius</h5>
+        <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> No results found inside your radius</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         No service stations were found inside your specified radius.  Please broaden your radius and try again.
       </div>
       <div class="modal-footer">
-        <h1 id="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
+        <h1 class="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
         <button type="button" onclick="window.location.reload();" class="btn btn-secondary" data-bs-dismiss="modal">Try again</button>
         <!-- <button type="button" class="btn btn-primary">Alternatively, search by suburb and postcode instead.</button> -->
       </div>
@@ -85,7 +85,7 @@
 
 <!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
 <!-- Modal -->
-<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="input-missing-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -99,7 +99,7 @@
         <span id="missing-text-after"></span>
       </div>
       <div class="modal-footer">
-        <h1 id="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
+        <h1 class="fuelseeker-logo">FuelSeeker <span class="nsw-img">NSW</span></h1>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -199,7 +199,7 @@
 
   <footer class="text-center pt-3 pr-3 pl-3 pb-3" style="background-color: rgba(0, 0, 0, 0.6);">
   <!-- Copyright -->
-    <small p-2>Disclaimer #1: this website does not purport to represent the NSW Government. Disclaimer #2: use at your own risk; FuelSeeker accepts no liabilities, and makes no guarantees on the accuracy of information on this website. | Image attributions as follows.  <a href="https://www.freepik.com/free-vector/cartoon-style-gas-station-background_21888165.htm">Image by pikisuperstar</a> on Freepik.  New South Wales by Support Designs from <a href="https://thenounproject.com/browse/icons/term/new-south-wales/" target="_blank" title="New South Wales Icons">Noun Project</a></small>. | © <span id="current-year"></span> Copyright FuelSeeker
+    <small class="p-2">Disclaimer #1: this website does not purport to represent the NSW Government. Disclaimer #2: use at your own risk; FuelSeeker accepts no liabilities, and makes no guarantees on the accuracy of information on this website. | Image attributions as follows.  <a href="https://www.freepik.com/free-vector/cartoon-style-gas-station-background_21888165.htm">Image by pikisuperstar</a> on Freepik.  New South Wales by Support Designs from <a href="https://thenounproject.com/browse/icons/term/new-south-wales/" target="_blank" title="New South Wales Icons">Noun Project</a></small>. | © <span id="current-year"></span> Copyright FuelSeeker
 
   <!-- Copyright -->
 </footer>

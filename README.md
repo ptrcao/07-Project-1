@@ -89,7 +89,7 @@ There is also a small staic map for each result showing the directions from A (U
 
 ## Credits
 
-- Peter Cao - https://github.com/ptrcao, 
+- Peter Cao - https://github.com/ptrcao
 - Joana Villajuan - https://github.com/joanavillajuan
 - Dylan Stroud - https://github.com/Dylan-Stroud
 - Sarah Mullock - https://github.com/smullock
