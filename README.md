@@ -84,7 +84,7 @@ The results are returned showing a Large Google Map with the Users location and 
 
 There is also a small staic map for each result showing the directions from A (User Location) to B (Fuel Location)
 
-![This shows a small map with the users location and direction to each specific fuel station](./assets/images/smal_map_single.PNG)
+![This shows a panned out view of the results returned.  Note that the positioning of the fixed bar across the page in the middle of the page is an artifact of a full page screenshot and does not occur from the website viewer's point of view.](./assets/images/results-cards-2.png)
 
 
 
