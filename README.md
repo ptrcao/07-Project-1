@@ -13,7 +13,7 @@
 
 ## Description
 
-Fuel Seeker is an application that allows users to search for Fuel Nearby to their location. Users can search by Fuel Type, Price and Distance.
+Fuel Seeker is an application that allows users to search for Fuel nearby to their location. Users can search by Fuel Type, Price and Distance.
 The projct uses two Third Party API's.
  - NSW Fuel API - a governement API which is used to get the Nearby Fuel Prices across NSW.
  - Google Maps Javascript API - used to display both Interactive and Static Maps that show the location of Fuel Stations and directions from the Users location. 
@@ -26,7 +26,7 @@ The projct uses two Third Party API's.
 
 ```
 AS A motorist
-I WANT to search for Fuel Nearby
+I WANT to search for Fuel nearby
 SO THAT I can find the cheapest or closest fuel to my current location
 ```
 
