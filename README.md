@@ -47,7 +47,7 @@ THEN I am prompted with a modal that tells me missing selections
 WHEN I select electric vehicle (EV) charge as the fuel type,
 THEN I am presented with a disclaimer about limited pricing information, and the Sort by Price option is disabled
 WHEN I select Find Station button
-THEN I am presented with a map that shows the 10 stations with a marker within the chosen radius, I am also presented with detailed results cards for each staion, including mao directions visualised
+THEN I am presented with a map that shows the 10 stations with a marker within the chosen radius, I am also presented with detailed results cards for each staion, including map directions visualised
 WHEN I select find again button
 THEN I am returned to the landing page.
 WHEN I select auto fill based on last search button
