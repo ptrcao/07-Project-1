@@ -1,6 +1,6 @@
 # Fuel Seeker NSW
 
-<p style="background-color:yellow;font-weight:bold;">IMPORTANT: this project uses a CORS workaround.  You may need to go to https://cors-anywhere.herokuapp.com/corsdemo and click to request temporary access to the CORS proxy server that we use, in order to be able to view the website.  Note that this is purely a development constraint, and a limitation of not being allowed a backend in this Project.  In a real-world production app, this CORS complication would not be applicable because the APIs calls would be handled unproblematically at the back end.  If there are any issues, please contact the authors.</p>
+<p style="background-color:yellow;font-weight:bold;">IMPORTANT: this project uses a CORS workaround.  You may need to go to https://cors-anywhere.herokuapp.com/corsdemo and click to request temporary access to the CORS proxy server that we use, in order to be able to view the website properly.  Note that this is purely a development constraint, and a limitation of not being allowed a backend in this project.  In a real-world production app, this CORS complication would not be applicable because the APIs calls would be handled unproblematically at the back end.  If there are any issues, please contact the authors.</p>
 
 ![This shows an additional step needed to view the website.](./assets/readme-assets/cors-anywhere-herokuapp-corsdemo.PNG)
 IMPORTANT: the screenshot above depicts an additional step which may be required to view the deployed website.
