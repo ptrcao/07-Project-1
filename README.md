@@ -77,15 +77,13 @@ THEN the input fields are cleared
 The user will be prompted to allow their geolocation to be read when they open their browser to the Landing page. Once confirmed the user can select their Input Parameters and click Find Station to return results. 
 
 ![This shows the landing page where uses can inlcude there Fuel Choice, Radius and sort by options](./assets/images/FuelSeeker_Landing.PNG)
-
 The results are returned showing a Large Google Map with the Users location and all of the Fuel Markers places on the Map.
 
 ![This shows a large map with the users location and markers of the fuel stations](./assets/images/largeMap.PNG)
+There is also a small staic map for each result showing the directions from A (User Location) to B (Fuel Location).
 
-There is also a small staic map for each result showing the directions from A (User Location) to B (Fuel Location)
-
-![This shows a panned out view of the results returned.  Note that the positioning of the fixed bar across the page in the middle of the page is an artifact of a full page screenshot and does not occur from the website viewer's point of view.](./assets/images/results-cards-2.png)
-
+![This shows a panned out, all-inclusive view of the results returned.](./assets/images/results-cards-2.png)
+This shows a panned out view of the results returned.  (Note that the positioning of the fixed bar across the middle of the page is an artifact of a full page screenshot and does not occur from the website viewer's point of view).
 
 
 
