@@ -75,7 +75,7 @@ THEN the input fields are cleared
 - Google Maps Javascript API
 - Geolocation
 
-## Usage
+## Screenshots
 
 The user will be prompted to allow their geolocation to be read when they open their browser to the Landing page. Once confirmed the user can select their Input Parameters and click Find Station to return results. 
 
@@ -86,7 +86,7 @@ The results are returned showing a Large Google Map with the Users location and 
 There is also a small staic map for each result showing the directions from A (User Location) to B (Fuel Location).
 
 ![This shows a panned out, all-inclusive view of the results returned.](./assets/images/results-cards-2.png)
-This shows a panned out view of the results returned.  (Note that the positioning of the fixed bar across the middle of the page is an artifact of a full page screenshot and does not occur from the website viewer's point of view).
+This shows a panned out view of the results returned.  (Note that the positioning of the fixed bar across the middle of the page is an artifact of a full page screenshot and does not occur from the website user's point of view).
 
 
 
