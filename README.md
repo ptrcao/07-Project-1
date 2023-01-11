@@ -1,6 +1,6 @@
 # Fuel Seeker NSW
 
-> <span style="background-color:yellow;font-weight:bold;">IMPORTANT: this project uses a CORS workaround.  You may need to visit https://cors-anywhere.herokuapp.com/corsdemo and request temporary access to the CORS proxy server that we use, in order to be able to view the website.</span>
+<p style="background-color:yellow;font-weight:bold;">IMPORTANT: this project uses a CORS workaround.  You may need to visit https://cors-anywhere.herokuapp.com/corsdemo and request temporary access to the CORS proxy server that we use, in order to be able to view the website.</p>
 
 > Repository URL:
 > https://github.com/ptrcao/07-Project-1.git
