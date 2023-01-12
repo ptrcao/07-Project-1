@@ -203,14 +203,14 @@ var noResultsModal = new bootstrap.Modal(
 );
 
 // Using test API
-var auth =
-  "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==";
-var apikey = "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT";
+// var auth =
+//   "Basic MU1ZU1JBeDV5dnFIVVpjNlZHdHhpeDZvTUEycWdmUlQ6Qk12V2FjdzE1RXQ4dUZHRg==";
+// var apikey = "1MYSRAx5yvqHUZc6VGtxix6oMA2qgfRT";
 
 // Using free registered API
-// var auth =
-//   "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
-// var apikey = "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4";
+var auth =
+  "Basic ODhCWVYzdkNzNWtROWhuRWZqTVM2QzNDZ3hXNENyUjQ6TUtzYk9YNzdtNlA5dm1OSA==";
+var apikey = "88BYV3vCs5kQ9hnEfjMS6C3CgxW4CrR4";
 
 // Artificial selections
 // To test modal, comment out these 3:
