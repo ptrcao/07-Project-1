@@ -589,7 +589,7 @@ async function displayResult(main_array) {
     console.log("At least some service stations found inside of radius.");
   } else {
     console.log(
-      "No service stations were found inside your specified radius.  Please broaden your radius and try again."
+      "No service stations were found inside your specified radius.  If you are based outside of NSW, Australia, then this will be the logical outcome of being outside of the provisioned area.  If you <em>are</em> based in NSW in Australia, then please broaden your radius and try again."
     );
     // var resultsCountEle = document.createElement("div");
     // resultsCountEle.innerText =
