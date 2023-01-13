@@ -662,6 +662,8 @@ async function displayResult(main_array) {
     countOfReturnedResults = 0;
     // resultsCountEle.innerHTML = `<span class='search-terms'>${fuelTypeInnerText}</span> within <span class='search-terms'>${radius}</span>km, sorted by <span class='search-terms'>${sortByWhat}</span>: No results found. Try broadening your search parameters.`;
 
+    
+
     noResultsModal.show();
 
     // unlike the conditions above, the append elements are required here because the program will now exit
